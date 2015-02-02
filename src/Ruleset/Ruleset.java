@@ -1,6 +1,8 @@
 package Ruleset;
 
 import java.util.*;
+
+import Visibles.Visible;
 import Base.*;
 
 public class Ruleset {
@@ -15,20 +17,25 @@ public class Ruleset {
 	
 	/** Dictates what states we can go to */
 	protected TransitionFunction transitionFunction;
-		
-	/** Type of tournament */
-	protected Class<? extends Tournament> tournamentType;
+			
+	/** Database classes to configure before the tournament */
+	protected List<Class<? extends Record>> configClasses;
+	
+	/** The visible state of the tournament */
+	protected List<Visible> visibles;
 	
 	public Ruleset(List<State> states,
 			       State startState,
 			       List<Event> events,
 			       TransitionFunction transitionFunction,
-			       Class<? extends Tournament> tournamentType) {
+			       List<Class<? extends Record>> configClasses,
+			       List<Visible> visibles) {
 		this.states = states;
 		this.startState = startState;
 		this.events = events;
 		this.transitionFunction = transitionFunction;
-		this.tournamentType = tournamentType;
+		this.configClasses = configClasses;
+		this.visibles = visibles;
 	}
 	
 	public State getStartState() {
@@ -39,8 +46,7 @@ public class Ruleset {
 		return this.transitionFunction;
 	}
 	
-	public Class<? extends Tournament> getTournamentType() {
-		return this.tournamentType;
+	public List<Visible> getVisibles() {
+		return this.visibles;
 	}
-	
 }

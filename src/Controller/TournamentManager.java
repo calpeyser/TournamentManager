@@ -5,19 +5,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import Base.*;
 import Ruleset.*;
 import Data.*;
 import DataAction.*;
 import Model.*;
 import View.*;
+import Visibles.Visible;
 
 public class TournamentManager {
 	
 	public ContextFrame frame;
 	private Ruleset ruleset;
 	private TournamentDataStore db;
-	
+		
 	private ActionListener stateChanger() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
@@ -62,6 +66,10 @@ public class TournamentManager {
 		for (AutomaticDataAction action : ruleset.getStartState().getEntryConfig()) {
 			action.bind(db);
 			action.execute();
+		}
+		
+		for (Visible v : ruleset.getVisibles()) {
+			v.bind(db);
 		}
 		
 		this.frame = new ContextFrame(db.getContext(), ruleset);

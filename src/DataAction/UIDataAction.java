@@ -1,5 +1,6 @@
 package DataAction;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -18,6 +19,6 @@ import javax.swing.*;
 public abstract class UIDataAction extends DynamicDataAction {
 	
 	// throw the data action onto a from
-	public abstract void attachToFrame(ContextFrame frame);
+	public abstract void attachToFrame(Window frame);
 	
 }

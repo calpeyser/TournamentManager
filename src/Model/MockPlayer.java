@@ -5,14 +5,14 @@ import java.lang.reflect.*;
 import javax.persistence.*;
 
 import Base.*;
+import Data.InitializeWith;
 
 @Entity
 public class MockPlayer extends Record {
-	@Basic @Preconfig public String name;
+	@Basic @MustBeSet public String name;
 	@Basic public Integer score;
-	
-	public MockPlayer(String name) {
-		this.name = name;
+		
+	public MockPlayer() {
 		this.score = 0;
 	}
 	

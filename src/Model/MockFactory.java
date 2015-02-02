@@ -1,6 +1,10 @@
 package Model;
 
 import Ruleset.*;
+import Visibles.StubTableVisible;
+import Visibles.StubVisible;
+import Visibles.Visible;
+import Base.Record;
 import Data.*;
 import DataAction.*;
 
@@ -23,6 +27,7 @@ public class MockFactory {
 		// dynamic actions
 		List<UIDataAction> configurePlayer = new ArrayList<UIDataAction>();
 		configurePlayer.add(new ConfigurePlayer());
+		configurePlayer.add(new ConfigureAllPlayers());
 		
 		// states and events
 		State startState = new State("start", configure, configurePlayer, null);
@@ -50,7 +55,18 @@ public class MockFactory {
 		transition.put(endState, fromEnd);
 		TransitionFunction trans = new TransitionFunction(events, transition);
 		
-		return new Ruleset(states, startState, events, trans, MockTournament.class);
+		// configuration classes
+		List<Class<? extends Record>> configClasses = new ArrayList<Class<? extends Record>>();
+		configClasses.add(MockPlayer.class);
+		configClasses.add(MockMatch.class);
+		
+		// visibles
+		List<Visible> visibles = new ArrayList<Visible>();
+		visibles.add(new PlayerRankingVisible());
+		visibles.add(new StubVisible("Visible 2"));
+		visibles.add(new StubTableVisible());
+		
+		return new Ruleset(states, startState, events, trans, configClasses, visibles);
 	}
 	
 	public static TournamentDataStore makeMockDB(Ruleset r) {
@@ -58,7 +74,8 @@ public class MockFactory {
 		db.wipeDataStore();
 		for (int i = 0; i < 7; i++) {
 			String name = ("Player " + (i+1));
-			MockPlayer p = new MockPlayer(name);
+			MockPlayer p = new MockPlayer();
+			p.name = name;
 			db.getEntityManager().getTransaction().begin();
 			db.getEntityManager().persist(p);
 			db.getEntityManager().getTransaction().commit();

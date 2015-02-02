@@ -1,7 +1,9 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +19,8 @@ public class RecordDialogue extends JDialog {
 	// Record data
 	private Map<JComponent, String> compToAttrib;
 	
-	public RecordDialogue(JFrame parent, Map<JComponent, String> compToAttrib) {
-		super(parent, "Record Configuration", true);
+	public RecordDialogue(Window parent, Map<JComponent, String> compToAttrib) {
+		super(parent, "Record Configuration", Dialog.ModalityType.APPLICATION_MODAL);
 		
 		this.compToAttrib = compToAttrib;
 		
@@ -44,29 +46,5 @@ public class RecordDialogue extends JDialog {
 		submitButton.addActionListener(listener);
 	}
 	
-	/**
-	 * 
-	 * Returns a mapping from attribute names to given values
-	 */
-	public Map<String, Object> getValue() {
-		Map<String, Object> out = new HashMap<String, Object>();
-		for (JComponent comp : compToAttrib.keySet()) {
-			Object value = null;
-			if (comp.getClass() == JTextField.class) {
-				value = ((JTextField)comp).getText();
-			}
-			else if (comp.getClass() == JToggleButton.class) {
-				value = ((JToggleButton)comp).isSelected();
-			}
-			else if (comp.getClass() == JSpinner.class) {
-				value = ((JSpinner)comp).getValue();
-			}
-			else {
-				throw new RuntimeException("Could not parse component " + comp.getName());
-			}
-			out.put(compToAttrib.get(comp), value);
-		}
-		return out;
-	}
 	
 }

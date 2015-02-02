@@ -11,6 +11,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -25,6 +27,7 @@ import Data.*;
 import DataAction.DataAction;
 import DataAction.UIDataAction;
 import Ruleset.*;
+import Visibles.Visible;
 
 import javax.swing.JList;
 
@@ -39,6 +42,8 @@ public class ContextFrame extends JFrame {
 	private JTabbedPane tabbedPane;
 	private JPanel stateTab;
 	private JPanel actionTab;
+	private JTabbedPane visibleTab;
+	private Map<Visible, JPanel> visiblePanels;
 
 	// buttons
 	public JButton btnDoAction;
@@ -65,6 +70,7 @@ public class ContextFrame extends JFrame {
 		btnDynamicAction.addActionListener(listener);
 	}
 	
+	
 	public ContextFrame(TournamentContext context, Ruleset ruleset) {
 		super("Tournament Manager");
 		
@@ -82,8 +88,10 @@ public class ContextFrame extends JFrame {
 		stateTab.setLayout(new BorderLayout());
 		actionTab = new JPanel();
 		actionTab.setLayout(new BorderLayout());
+		visibleTab = new JTabbedPane();
 		tabbedPane.addTab("Current Tournament State", stateTab);
 		tabbedPane.addTab("Available Configuration Actions", actionTab);
+		tabbedPane.addTab("Tournament Stats", visibleTab);
 		
 		getContentPane().add(tabbedPane);
 		
@@ -117,6 +125,22 @@ public class ContextFrame extends JFrame {
 		// state starts at beginning state given in ruleset
 		setState(ruleset.getStartState());
 		
+		// visibleTab has all the visible data to give stats on the tournament
+		visiblePanels = new HashMap<Visible, JPanel>();
+		for (Visible v : ruleset.getVisibles()) {
+			JPanel p = new JPanel();
+			p.setLayout(new BorderLayout());
+			p.add(v.getComponent());
+			visibleTab.addTab(v.getName(), p);
+			visiblePanels.put(v, p);
+		}		
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (tabbedPane.getSelectedComponent() == visibleTab) {
+					refreshVisibles();
+				}
+			}
+		});
 	}
 
 	public void setState(State s) {
@@ -129,7 +153,13 @@ public class ContextFrame extends JFrame {
 		for (UIDataAction a : context.getCurrentState().getDuringConfig()) {
 			dataActionsModel.addElement(a);
 		}
-
 	}
 	
+	private void refreshVisibles() {
+		for (Visible v : visiblePanels.keySet()) {
+			visiblePanels.get(v).removeAll();
+			visiblePanels.get(v).add(v.getComponent());
+		}
+	}
+		
 }
