@@ -60,6 +60,11 @@ public class DBTableModel extends AbstractTableModel {
 	}
 	
 	@Override
+	public String getColumnName(int index) {
+		return recordType.getFields()[index].getName();
+	}
+	
+	@Override
 	public void fireTableDataChanged() {
 		refresh();
 		super.fireTableDataChanged();

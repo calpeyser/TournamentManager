@@ -1,13 +1,15 @@
 package MockTrial;
 
 import javax.persistence.*;
+
+import Base.MustBeSet;
 import Base.Record;
 
 @Entity
 public class Match extends Record {
 
-	@OneToOne public Team PTeam;
-	@OneToOne public Team DTeam;
+	@OneToOne (targetEntity = Team.class) @MustBeSet public Team PTeam;
+	@OneToOne (targetEntity = Team.class) @MustBeSet public Team DTeam;
 	
 	@Basic public Integer POpen;
 	@Basic public Integer PAttDirect1;
@@ -39,11 +41,5 @@ public class Match extends Record {
 	@Basic public Integer DWitCross3;
 	@Basic public Integer DClose;
 
-
-	
-	public Match(Team PTeam, Team DTeam) {
-		this.PTeam = PTeam;
-		this.DTeam = DTeam;
-	}
-	
+	public Match() {}
 }

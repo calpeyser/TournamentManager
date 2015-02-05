@@ -7,6 +7,7 @@ import View.RecordDialogue;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -16,6 +17,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.*;
 
+import Data.TournamentDataStore;
 import Utils.ConfigUtils;
 
 /**
@@ -69,18 +71,28 @@ public abstract class UIConfigAction extends UIDataAction {
 			}
 		};
 	}
-	
+
 	private void compileAttributes() {
 		assertBound();
-		compToAttrib = new HashMap<JComponent, String>();
+		compToAttrib = new LinkedHashMap<JComponent, String>(); // must preserve order
 		metamodel = db.getEntityManager().getMetamodel();
 		entityType = metamodel.entity(getRecordType());
 		
 		String[] attribs = getAttributesToConfigure();
 		
 		for (String attribName : attribs) {
-			Class<?> type = entityType.getAttribute(attribName).getJavaType();
-			JComponent comp = Utils.ConfigUtils.createComponent(type, getValue(attribName));
+			Attribute<?, ?> attrib = entityType.getAttribute(attribName);
+			
+			Field f = null;
+			try {
+				f = getRecordType().getField(attribName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			Annotation[] annotations = f.getAnnotations();
+			
+			JComponent comp = Utils.ConfigUtils.createComponent(attrib, annotations, getValue(attribName), db);
 			compToAttrib.put(comp, attribName);
 		}
 	}

@@ -18,7 +18,7 @@ public class MockPlayer extends Record {
 	
 	@Override
 	public String toString() {
-		return "Player with name " + name + " and score " + score;
+		return name;
 	}
 		
 }

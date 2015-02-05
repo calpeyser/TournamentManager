@@ -14,7 +14,8 @@ import Data.*;
 import DataAction.*;
 import Model.*;
 import View.*;
-import Visibles.Visible;
+import Visibles.*;
+import MockTrial.*; // gonna try to repurpose this...
 
 public class TournamentManager {
 	
@@ -81,8 +82,9 @@ public class TournamentManager {
 	
 	
 	public static void main(String[] args) {
-		Ruleset ruleset = MockFactory.makeMockRuleset();
-		final TournamentDataStore db = MockFactory.makeMockDB(ruleset);
+		MockTrialTournamentFactory factory = new MockTrialTournamentFactory();
+		Ruleset ruleset = factory.makeRuleset();
+		final TournamentDataStore db = factory.makeDB(ruleset);
 		
 		TournamentManager tm = new TournamentManager(ruleset, db);
 		tm.frame.addWindowListener(new WindowAdapter()

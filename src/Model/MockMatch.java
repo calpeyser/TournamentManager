@@ -5,14 +5,19 @@ import javax.persistence.*;
 
 @Entity
 public class MockMatch extends Record {
-	@Basic String name;
-	@OneToOne MockPlayer player1;
-	@OneToOne MockPlayer player2;
+	@Basic @MustBeSet public String name;
+	@OneToOne public MockPlayer player1;
+	@OneToOne public MockPlayer player2;
 
 	
-	public MockMatch(String name, MockPlayer player1, MockPlayer player2) {
-		this.name = name;
-		this.player1 = player1;
-		this.player2 = player2;
+	public MockMatch() {
+		this.player1 = null;
+		this.player2 = null;
 	}
+		
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 }

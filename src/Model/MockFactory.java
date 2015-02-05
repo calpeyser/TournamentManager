@@ -28,6 +28,10 @@ public class MockFactory {
 		List<UIDataAction> configurePlayer = new ArrayList<UIDataAction>();
 		configurePlayer.add(new ConfigurePlayer());
 		configurePlayer.add(new ConfigureAllPlayers());
+		configurePlayer.add(new ConfigureTeam());
+		configurePlayer.add(new ConfigureAllTeams());
+		configurePlayer.add(new ConfigureMatch());
+		configurePlayer.add(new ConfigureAllMatches());
 		
 		// states and events
 		State startState = new State("start", configure, configurePlayer, null);
@@ -59,6 +63,7 @@ public class MockFactory {
 		List<Class<? extends Record>> configClasses = new ArrayList<Class<? extends Record>>();
 		configClasses.add(MockPlayer.class);
 		configClasses.add(MockMatch.class);
+		configClasses.add(MockTeam.class);
 		
 		// visibles
 		List<Visible> visibles = new ArrayList<Visible>();
@@ -72,6 +77,8 @@ public class MockFactory {
 	public static TournamentDataStore makeMockDB(Ruleset r) {
 		TournamentDataStore db = new ObjectDBDataStore("$objectdb/db/MockDB2.odb");
 		db.wipeDataStore();
+		
+		// let's add some players
 		for (int i = 0; i < 7; i++) {
 			String name = ("Player " + (i+1));
 			MockPlayer p = new MockPlayer();
@@ -80,6 +87,20 @@ public class MockFactory {
 			db.getEntityManager().persist(p);
 			db.getEntityManager().getTransaction().commit();
 		}
+		
+		// let's add in a team
+		MockTeam t = new MockTeam();
+		t.name = "Team 1";
+		db.getEntityManager().getTransaction().begin();
+		db.getEntityManager().persist(t);
+		db.getEntityManager().getTransaction().commit();
+		
+		// let's add a match
+		MockMatch m = new MockMatch();
+		m.name = "Match 1";
+		db.getEntityManager().getTransaction().begin();
+		db.getEntityManager().persist(m);
+		db.getEntityManager().getTransaction().commit();
 		
 		db.setContext(new TournamentContext(r.getStartState()));
 		

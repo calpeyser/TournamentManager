@@ -9,12 +9,23 @@ import Base.Record;
 public class Player extends Record {
 
 	@Basic @MustBeSet public String name;
-	@OneToOne public Team team;
+	// @OneToOne (targetEntity = Team.class) public Team team;
 	@Basic public Integer ranks;
 	
-	public Player(String name, Team team) {
-		this.name = name;
-		this.team = team;
+	public Player() {
+		this.name = null;
+	//	this.team = null;
 		this.ranks = 0;
+	}
+	
+	public Player(String name) {
+		this.name = name;
+	//	this.team = null;
+		this.ranks = 0;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }

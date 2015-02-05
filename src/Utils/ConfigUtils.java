@@ -1,18 +1,41 @@
 package Utils;
 
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Entity;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.Attribute;
+import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+
+import Data.TournamentDataStore;
+import Model.MockPlayer;
 
 public class ConfigUtils {
 	/**
 	 * 
 	 * Returns a mapping from attribute names to given values
 	 */
+	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getValue(Map<JComponent, String> compToAttrib) {
 		Map<String, Object> out = new HashMap<String, Object>();
 		for (JComponent comp : compToAttrib.keySet()) {
@@ -26,6 +49,13 @@ public class ConfigUtils {
 			else if (comp.getClass() == JSpinner.class) {
 				value = ((JSpinner)comp).getValue();
 			}
+			else if (comp.getClass() == JComboBox.class) {
+				value = ((JComboBox<Object>)comp).getSelectedItem();
+			}
+			else if (comp.getClass() == JScrollPane.class) {
+				JList<Object> list = retrieveList((JScrollPane)comp);
+				value = list.getSelectedValuesList();
+			}
 			else {
 				throw new RuntimeException("Could not parse component " + comp.getName());
 			}
@@ -34,8 +64,10 @@ public class ConfigUtils {
 		return out;
 	}
 	
-	public static JComponent createComponent(Class<?> type, Object value) {
+	public static JComponent createComponent(Attribute<?,?> attrib, Annotation[] annotations, Object value, TournamentDataStore db) {
 		JComponent out;
+		Class<?> type = attrib.getJavaType();
+		// basic
 		if (type == String.class) {
 			JTextField typedOut = new JTextField();
 			typedOut.setColumns(10);
@@ -52,10 +84,50 @@ public class ConfigUtils {
 			typedOut.setValue(value);
 			out = (JComponent) typedOut;
 		}
+		// one-to-one
+		else if (type.isAnnotationPresent(Entity.class)) {
+			Query q = db.getEntityManager().createQuery("Select c FROM " + type.getSimpleName() + " c");
+			List<?> optionsList = q.getResultList();
+			Object[] options = new Object[optionsList.size()];
+			for (int i = 0; i < optionsList.size(); i++) {
+				options[i] = optionsList.get(i);
+			}
+			out = new JComboBox<Object>(options);
+		}
+		// many-to-one
+		else if (MiscUtils.isOneToMany(annotations)) {
+			Class<?> targetEntity = MiscUtils.getInnerType(annotations);
+			Query q = db.getEntityManager().createQuery("Select c FROM " + targetEntity.getSimpleName() + " c");
+			List<?> optionsList = q.getResultList();
+			Object[] options = new Object[optionsList.size()];
+			for (int i = 0; i < optionsList.size(); i++) {
+				options[i] = optionsList.get(i);
+			}
+			JList<Object> list = new JList<Object>(options);
+			list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			
+			// select the correct elements
+			@SuppressWarnings("unchecked")
+			Iterable<Object> valueList = (Iterable<Object>)value;
+			List<Integer> indexes = new ArrayList<Integer>();
+			for (Object v : valueList) {
+				indexes.add(optionsList.indexOf(v));
+			}
+			list.setSelectedIndices(MiscUtils.listToArrayInt(indexes));
+			
+			out = new JScrollPane(list);
+		}
 		else {
-			throw new RuntimeException("Could not parse type " + type.getName());
+			throw new RuntimeException("Could not parse  type " + type.getName());
 		}
 		return out;
-	}	
-
+	}
+	
+	private static JList<Object> retrieveList(JScrollPane pane) {
+			JViewport viewport = pane.getViewport();
+			@SuppressWarnings("unchecked")
+			JList<Object> list = (JList<Object>)viewport.getView();
+			return list;
+	}
+	
 }
