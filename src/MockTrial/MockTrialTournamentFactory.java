@@ -13,7 +13,7 @@ import Visibles.Visible;
  * Describes, on the highest level, the AMTA Mock Trial ruleset
  *
  */
-public class MockTrialTournamentFactory extends TournamentFactory {
+public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 
 	@Override
 	public Ruleset makeRuleset() {
@@ -81,27 +81,13 @@ public class MockTrialTournamentFactory extends TournamentFactory {
 
 	@Override
 	public TournamentDataStore makeDB(Ruleset r) {
-		TournamentDataStore db = new ObjectDBDataStore("$objectdb/db/MockTrialDB1.odb");
-		db.wipeDataStore();
-		db.setContext(new TournamentContext(r.getStartState()));	
+
+		TournamentDataStore db = super.makeDB(r);
 		
 		addTestingData(db);
 		
 		return db;
 	}		
-	
-	@Override
-	public TournamentDataStore makeDB(String path) {
-		TournamentDataStore db = new ObjectDBDataStore(path);
-		Query q = db.getEntityManager().createQuery("SELECT c FROM State c");
-		@SuppressWarnings("unchecked")
-		List<State> states = q.getResultList();
-		assert(states.size() == 1);
-		State s = states.get(0);
-		db.setContext(new TournamentContext(s));
-		
-		return db;
-	}
 	
 	// shouldn't be there in real life.  Just to take the pain out of config
 	private void addTestingData(TournamentDataStore db) {

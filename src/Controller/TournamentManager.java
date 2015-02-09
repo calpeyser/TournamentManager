@@ -46,17 +46,7 @@ public class TournamentManager {
 					action.bind(db);
 					action.execute();
 				}
-				
-				// tell the database that we are in a new state
-				db.getEntityManager().getTransaction().begin();
-				Query q = db.getEntityManager().createQuery("SELECT c FROM State c");
-				List<State> oldStates = q.getResultList();
-				for (State s : oldStates) {
-					db.getEntityManager().detach(s);
-				}
-				db.getEntityManager().persist(newState);
-				db.getEntityManager().getTransaction().commit();
-				
+								
 				// save the database
 				db.save();
 				
@@ -104,22 +94,23 @@ public class TournamentManager {
 		TournamentDataStore dbinit = null; 
 		if (args.length == 0) {
 			dbinit = factory.makeDB(ruleset);
+			dbinit.cleanFiles();
 		}
 		else {
-			dbinit = factory.makeDB(args[0]);
+			dbinit = factory.makeDB(ruleset, args[0]);
 		}
 		
 		final TournamentDataStore db = dbinit;
 		
 		TournamentManager tm = new TournamentManager(ruleset, db);
-		tm.frame.addWindowListener(new WindowAdapter()
+		/*tm.frame.addWindowListener(new WindowAdapter()
 		{
 			@Override
 			public void windowClosing(WindowEvent e) {
 				db.wipeDataStore();
 				e.getWindow().dispose();
 			}
-		});
+		});*/
 		tm.frame.setVisible(true);
 	}
 }

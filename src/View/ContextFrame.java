@@ -123,7 +123,7 @@ public class ContextFrame extends JFrame {
 		actionTab.add(actionList, BorderLayout.CENTER);
 		
 		// state starts at beginning state given in ruleset
-		setState(ruleset.getStartState());
+		setState(context.getCurrentState());
 		
 		// visibleTab has all the visible data to give stats on the tournament
 		visiblePanels = new HashMap<Visible, JPanel>();

@@ -49,4 +49,13 @@ public class Ruleset {
 	public List<Visible> getVisibles() {
 		return this.visibles;
 	}
+	
+	public State stateByName(String stateName) {
+		for (State s : states) {
+			if (s.getName().equals(stateName)) {
+				return s;
+			}
+		}
+		throw new RuntimeException("Could not find state named " + stateName);
+	}
 }
