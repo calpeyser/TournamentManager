@@ -15,5 +15,7 @@ public interface TournamentDataStore {
 	public TournamentContext getContext();
 	
 	public void setContext(TournamentContext context);
+	
+	public void save();
 
 }

@@ -4,9 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.*;
 
+import javax.persistence.Query;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import java.util.*;
 
 import Base.*;
 import Ruleset.*;
@@ -43,6 +47,19 @@ public class TournamentManager {
 					action.execute();
 				}
 				
+				// tell the database that we are in a new state
+				db.getEntityManager().getTransaction().begin();
+				Query q = db.getEntityManager().createQuery("SELECT c FROM State c");
+				List<State> oldStates = q.getResultList();
+				for (State s : oldStates) {
+					db.getEntityManager().detach(s);
+				}
+				db.getEntityManager().persist(newState);
+				db.getEntityManager().getTransaction().commit();
+				
+				// save the database
+				db.save();
+				
 				// alter frame
 				frame.setState(newState);			
 			}
@@ -59,7 +76,7 @@ public class TournamentManager {
 			}
 		};
 	}
-	
+		
 	public TournamentManager(final Ruleset ruleset, final TournamentDataStore db) {		
 		this.ruleset = ruleset;
 		this.db = db;
@@ -80,11 +97,19 @@ public class TournamentManager {
 		frame.addDynamicActions(dynamicAction());
 	}
 	
-	
 	public static void main(String[] args) {
+
 		MockTrialTournamentFactory factory = new MockTrialTournamentFactory();
 		Ruleset ruleset = factory.makeRuleset();
-		final TournamentDataStore db = factory.makeDB(ruleset);
+		TournamentDataStore dbinit = null; 
+		if (args.length == 0) {
+			dbinit = factory.makeDB(ruleset);
+		}
+		else {
+			dbinit = factory.makeDB(args[0]);
+		}
+		
+		final TournamentDataStore db = dbinit;
 		
 		TournamentManager tm = new TournamentManager(ruleset, db);
 		tm.frame.addWindowListener(new WindowAdapter()

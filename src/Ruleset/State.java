@@ -2,10 +2,14 @@ package Ruleset;
 
 import java.util.*;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+
 import DataAction.*;
 
+@Entity
 public class State {
-	private String name;
+	@Basic private String name;
 	private List<AutomaticDataAction> entryConfig;
 	private List<UIDataAction> duringConfig;
 	private List<AutomaticDataAction> exitConfig;

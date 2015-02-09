@@ -1,6 +1,12 @@
 package Data;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javax.persistence.*;
 
 /**
@@ -9,7 +15,6 @@ import javax.persistence.*;
  * Uses java's basic Persistence facilities.  ObjectDB is something
  * I found on the internet. 
  * 
- * NOTE: ObjectDB dosen't seem to support JPA 2.1, which I need.  That's a problem.
  *
  */
 public class ObjectDBDataStore implements TournamentDataStore {
@@ -17,7 +22,10 @@ public class ObjectDBDataStore implements TournamentDataStore {
 	private EntityManager em;
 	private TournamentContext context;
 	
+	private String location;
+	
 	public ObjectDBDataStore(String location) {
+		this.location = location;
 		emf = Persistence.createEntityManagerFactory(location);
 		em = emf.createEntityManager();
 	}
@@ -27,6 +35,30 @@ public class ObjectDBDataStore implements TournamentDataStore {
 		return em;
 	}
 
+	@Override
+	public void save() {
+		String newLocation = location + "_" + context.getCurrentState().getName();
+		// find the next number
+		int i = 1;
+		while(true) {
+			String canditateLocation = newLocation + "_" + i;
+			File f = new File(canditateLocation);
+			if (f.exists()) {
+				continue;
+			}
+			else {
+				Path source = Paths.get(location);
+				Path destination = Paths.get(canditateLocation);
+				try {
+					Files.copy(source, destination);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+		}
+	}
+	
 	public void wipeDataStore() {
 		em.getTransaction().begin();
 		Query allQuery = em.createQuery("DELETE FROM Object");
