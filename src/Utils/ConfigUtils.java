@@ -26,8 +26,12 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerNumberModel;
 
+import Base.Record;
 import Data.TournamentDataStore;
+import DataAction.OptionsModel;
 import Model.MockPlayer;
 
 public class ConfigUtils {
@@ -64,7 +68,7 @@ public class ConfigUtils {
 		return out;
 	}
 	
-	public static JComponent createComponent(Attribute<?,?> attrib, Annotation[] annotations, Object value, TournamentDataStore db) {
+	public static JComponent createComponent(String attribName, Attribute<?,?> attrib, Annotation[] annotations, Record instance, Object value, OptionsModel optionsModel) {
 		JComponent out;
 		Class<?> type = attrib.getJavaType();
 		// basic
@@ -74,31 +78,39 @@ public class ConfigUtils {
 			typedOut.setText((String) value);
 			out = (JComponent) typedOut;
 		}
-		else if (type == boolean.class || type == Boolean.class) {
+		else if (type == boolean.class) {
 			JToggleButton typedOut = new JToggleButton();
 			typedOut.setSelected((boolean) value);
 			out = (JComponent) typedOut;
 		}
-		else if (type == int.class || type == Integer.class) {
-			JSpinner typedOut = new JSpinner();
-			typedOut.setValue(value);
-			out = (JComponent) typedOut;
+		else if (type == int.class) {
+			if (optionsModel.options(attribName, instance) == null) {
+				JSpinner typedOut = new JSpinner(new SpinnerNumberModel());
+				typedOut.setValue(value);
+				out = (JComponent) typedOut;
+			}
+			else { 
+				List<?> options = optionsModel.options(attribName, instance);
+				JSpinner typedOut = new JSpinner(new SpinnerListModel(options));
+				typedOut.setValue(value);
+				out = (JComponent) typedOut;
+			}
 		}
 		// one-to-one
 		else if (type.isAnnotationPresent(Entity.class)) {
-			Query q = db.getEntityManager().createQuery("Select c FROM " + type.getSimpleName() + " c");
-			List<?> optionsList = q.getResultList();
+			List<?> optionsList = optionsModel.options(attribName, instance);
 			Object[] options = new Object[optionsList.size()];
 			for (int i = 0; i < optionsList.size(); i++) {
 				options[i] = optionsList.get(i);
 			}
-			out = new JComboBox<Object>(options);
+			JComboBox<Object> typedOut = new JComboBox<Object>(options);
+			typedOut.setSelectedItem(value);
+			
+			out = (JComponent) typedOut;	
 		}
 		// many-to-one
 		else if (MiscUtils.isOneToMany(annotations)) {
-			Class<?> targetEntity = MiscUtils.getInnerType(annotations);
-			Query q = db.getEntityManager().createQuery("Select c FROM " + targetEntity.getSimpleName() + " c");
-			List<?> optionsList = q.getResultList();
+			List<?> optionsList = optionsModel.options(attribName, instance);
 			Object[] options = new Object[optionsList.size()];
 			for (int i = 0; i < optionsList.size(); i++) {
 				options[i] = optionsList.get(i);

@@ -4,15 +4,16 @@ import java.util.*;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 import DataAction.*;
 
 @Entity
 public class State {
 	@Basic private String name;
-	private List<AutomaticDataAction> entryConfig;
-	private List<UIDataAction> duringConfig;
-	private List<AutomaticDataAction> exitConfig;
+	@Transient private List<AutomaticDataAction> entryConfig;
+	@Transient private List<UIDataAction> duringConfig;
+	@Transient private List<AutomaticDataAction> exitConfig;
 	
 	public State(String name, 
 			     List<AutomaticDataAction> entryConfig,

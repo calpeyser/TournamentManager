@@ -25,7 +25,7 @@ public class RecordDialogue extends JDialog {
 		this.compToAttrib = compToAttrib;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 800, 400);
+		setBounds(100, 100, 900, 900);
 		
 		getContentPane().setLayout(new GridLayout(0, 2));
 		

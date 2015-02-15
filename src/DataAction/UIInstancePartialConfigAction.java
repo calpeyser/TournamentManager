@@ -8,7 +8,7 @@ import Data.TournamentDataStore;
 public class UIInstancePartialConfigAction extends UIConfigAction {
 
 	private Record instance;
-	private Class<?> type;
+	private Class<? extends Record> type;
 	private String[] attribsToConfigure;
 	
 	public UIInstancePartialConfigAction (Record instance, TournamentDataStore db, String[] attribsToConfigure) {
@@ -16,6 +16,15 @@ public class UIInstancePartialConfigAction extends UIConfigAction {
 		this.type = instance.getClass();
 		this.attribsToConfigure = attribsToConfigure;
 		this.bind(db);
+		this.model = new DefaultOptionsModel(getRecordType(), db);
+	}
+	
+	public UIInstancePartialConfigAction (Record instance, TournamentDataStore db, String[] attribsToConfigure, OptionsModel model) {
+		this.instance = instance;
+		this.type = instance.getClass();
+		this.attribsToConfigure = attribsToConfigure;
+		this.bind(db);
+		this.model = model;	
 	}
 	
 	@Override
@@ -24,7 +33,7 @@ public class UIInstancePartialConfigAction extends UIConfigAction {
 	}
 
 	@Override
-	protected Class<?> getRecordType() {
+	protected Class<? extends Record> getRecordType() {
 		return type;
 	}
 

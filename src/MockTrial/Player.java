@@ -10,22 +10,37 @@ public class Player extends Record {
 
 	@Basic @MustBeSet public String name;
 	// @OneToOne (targetEntity = Team.class) public Team team;
-	@Basic public Integer ranks;
+	@Basic public int PAttRanks;
+	@Basic public int PWitRanks;
+	@Basic public int DAttRanks;
+	@Basic public int DWitRanks;
+
 	
 	public Player() {
 		this.name = null;
 	//	this.team = null;
-		this.ranks = 0;
+		this.PAttRanks = 0; 
+		this.PWitRanks = 0;
+		this.DAttRanks = 0;
+		this.DWitRanks = 0;
 	}
 	
 	public Player(String name) {
 		this.name = name;
 	//	this.team = null;
-		this.ranks = 0;
+		this.PAttRanks = 0; 
+		this.PWitRanks = 0;
+		this.DAttRanks = 0;
+		this.DWitRanks = 0;
 	}
 	
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public boolean isSet() {
+		return true;
 	}
 }

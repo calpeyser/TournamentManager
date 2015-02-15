@@ -29,8 +29,9 @@ import Utils.ConfigUtils;
 public abstract class UIConfigAction extends UIDataAction {
 
 	protected abstract Record getRecord();
-	protected abstract Class<?> getRecordType();
+	protected abstract Class<? extends Record> getRecordType();
 	protected abstract String[] getAttributesToConfigure();
+	protected OptionsModel model;
 	
 	private Map<JComponent, String> compToAttrib;
 	
@@ -45,7 +46,7 @@ public abstract class UIConfigAction extends UIDataAction {
 		dialog.addListenerToSubmit(submitButton());
 		dialog.setVisible(true);
 	}
-	
+
 	private ActionListener submitButton() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -92,7 +93,11 @@ public abstract class UIConfigAction extends UIDataAction {
 			
 			Annotation[] annotations = f.getAnnotations();
 			
-			JComponent comp = Utils.ConfigUtils.createComponent(attrib, annotations, getValue(attribName), db);
+			if (model == null) {
+				model = new DefaultOptionsModel(getRecordType(), db);
+			}
+			
+			JComponent comp = Utils.ConfigUtils.createComponent(attribName, attrib, annotations, getRecord(), getValue(attribName), model);
 			compToAttrib.put(comp, attribName);
 		}
 	}
@@ -106,10 +111,5 @@ public abstract class UIConfigAction extends UIDataAction {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	@Override
-	public void execute() {
-		return;
 	}
 }

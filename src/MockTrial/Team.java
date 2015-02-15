@@ -36,5 +36,10 @@ public class Team extends Record {
 	public String toString() {
 		return schoolName + " " + designation;
 	}
+
+	@Override
+	public boolean isSet() {
+		return true;
+	}
 	
 }

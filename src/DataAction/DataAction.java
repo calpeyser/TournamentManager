@@ -15,9 +15,7 @@ public abstract class DataAction {
 		this.db = db;
 		this.bound = true;
 	}
-	
-	public abstract void execute();
-	
+		
 	protected void assertBound() {
 		if (!bound) {
 			throw new RuntimeException("DataAction not bound!");

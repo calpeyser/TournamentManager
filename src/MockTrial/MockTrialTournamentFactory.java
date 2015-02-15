@@ -21,14 +21,23 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 		// actions
 		UIDataAction configurePlayers = new AddPlayers();
 		UIDataAction configureTeams   = new AddTeams();
+		UIDataAction excelConfig = new MTExcelConfig();
 		
 		List<UIDataAction> configActions = new ArrayList<UIDataAction>();
 		configActions.add(configurePlayers);
 		configActions.add(configureTeams);
+		configActions.add(excelConfig);
+		
+		List<AutomaticDataAction> round1EntryActions = new ArrayList<AutomaticDataAction>();
+		round1EntryActions.add(new Round1Pairings());
+		
+		List<UIDataAction> roundActions = new ArrayList<UIDataAction>();
+		roundActions.add(new EditMatches());
+		
 		
 		// states
 		State configure = new State("Initial Configuration", null, configActions, null);
-		State round1 = new State("Round One", null, null, null);
+		State round1 = new State("Round One", round1EntryActions, roundActions, null);
 		State round2 = new State("Round Two", null, null, null);
 		State round3 = new State("Round Three", null, null, null);
 		State round4 = new State("Round Four", null, null, null);
@@ -84,7 +93,7 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 
 		TournamentDataStore db = super.makeDB(r);
 		
-		addTestingData(db);
+		//addTestingData(db);
 		
 		return db;
 	}		

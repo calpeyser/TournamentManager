@@ -13,8 +13,12 @@ import Base.*;
 public abstract class UITableConfigAction extends UIDataAction {
 
 	protected abstract Class<? extends Record> getRecordType();
-	private TableDialog dialog;
-	private DBTableModel data;
+	protected TableDialog dialog;
+	protected DBTableModel data;
+	
+	protected OptionsModel getOptionsModel() {
+		return new DefaultOptionsModel(getRecordType(), db);
+	}
 	
 	@Override
 	public void attachToFrame(Window frame) {
@@ -27,7 +31,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 		dialog.setVisible(true);		
 	}
 
-	private ActionListener addButton() {
+	protected ActionListener addButton() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// create the new database object and persist it
@@ -48,7 +52,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 					}
 				}
 				// create the UIConfigAction to create this object
-				UIConfigAction configure = new UIInstancePartialConfigAction((Record)databaseObject, db, MiscUtils.listToArray(attribsToConfig));
+				UIConfigAction configure = new UIInstancePartialConfigAction((Record)databaseObject, db, MiscUtils.listToArray(attribsToConfig), getOptionsModel());
 
 				// attach it
 				configure.attachToFrame(dialog);
@@ -58,7 +62,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 	}
 	
 	// edit a row in the database
-	private ActionListener editButton() {
+	protected ActionListener editButton() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int selectedRow = dialog.table.getSelectedRow();
@@ -68,7 +72,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 				Object databaseObject = data.data.get(selectedRow);
 				
 				// create a UIConfigAction to attach to this thing
-				UIConfigAction configure = new UIInstanceConfigAction((Record)databaseObject, db);
+				UIConfigAction configure = new UIInstanceConfigAction((Record)databaseObject, db, getOptionsModel());
 	
 				// attach it
 				configure.attachToFrame(dialog);
@@ -78,7 +82,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 	}
 	
 	// delete a database entry
-	private ActionListener deleteButton() {
+	protected ActionListener deleteButton() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int selectedRow = dialog.table.getSelectedRow();
@@ -95,7 +99,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 	}
 	
 	// standard disposal listener
-	private ActionListener exitButton() {
+	protected ActionListener exitButton() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dialog.setVisible(false);
@@ -103,10 +107,4 @@ public abstract class UITableConfigAction extends UIDataAction {
 			}
 		};
 	}
-	
-	@Override
-	public void execute() {
-		return;
-	}
-
 }

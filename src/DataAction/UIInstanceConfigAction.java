@@ -8,13 +8,21 @@ import Data.TournamentDataStore;
 public class UIInstanceConfigAction extends UIConfigAction {
 
 	private Record instance;
-	private Class<?> type;
+	private Class<? extends Record> type;
 	
 	public UIInstanceConfigAction (Record instance, TournamentDataStore db) {
 		this.instance = instance;
 		this.type = instance.getClass();
 		this.bind(db);
+		this.model = new DefaultOptionsModel(getRecordType(), db);
 	}
+	
+	public UIInstanceConfigAction (Record instance, TournamentDataStore db, OptionsModel model) {
+		this.instance = instance;
+		this.type = instance.getClass();
+		this.bind(db);
+		this.model = model;
+	}	
 	
 	@Override
 	protected Record getRecord() {
@@ -22,7 +30,7 @@ public class UIInstanceConfigAction extends UIConfigAction {
 	}
 
 	@Override
-	protected Class<?> getRecordType() {
+	protected Class<? extends Record> getRecordType() {
 		return type;
 	}
 

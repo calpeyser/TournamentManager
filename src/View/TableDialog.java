@@ -36,8 +36,8 @@ public class TableDialog extends JDialog {
 	 */
 	public TableDialog(Window parent, DBTableModel data) {
 		super(parent, "Table Configuration", Dialog.ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 900, 500);
-		getContentPane().setLayout(new FlowLayout());
+		setBounds(100, 100, 1500, 600);
+		getContentPane().setLayout(new BorderLayout());
 		
 		table = new JTable(data);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -51,8 +51,8 @@ public class TableDialog extends JDialog {
 		buttonPane.add(addButton); buttonPane.add(editButton); buttonPane.add(deleteButton); buttonPane.add(exitButton); 
 		
 		
-		getContentPane().add(tableScrollPane);
-		getContentPane().add(buttonPane);
+		getContentPane().add(tableScrollPane, BorderLayout.NORTH);
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 	}
 	
 	public void addListenerToExit(ActionListener listener) {
@@ -67,4 +67,13 @@ public class TableDialog extends JDialog {
 	public void addListenerToEdit(ActionListener listener) {
 		editButton.addActionListener(listener);
 	}
-}
+	public void disableAdd() {
+		addButton.setEnabled(false);
+	}
+	public void disableEdit() {
+		editButton.setEnabled(false);
+	}
+	public void disableDelete() {
+		deleteButton.setEnabled(false);
+	}
+} 
