@@ -9,7 +9,6 @@ import Base.Record;
 public class Player extends Record {
 
 	@Basic @MustBeSet public String name;
-	// @OneToOne (targetEntity = Team.class) public Team team;
 	@Basic public int PAttRanks;
 	@Basic public int PWitRanks;
 	@Basic public int DAttRanks;
@@ -18,8 +17,6 @@ public class Player extends Record {
 	
 	public Player() {
 		this.name = null;
-	//	this.team = null;
-		this.PAttRanks = 0; 
 		this.PWitRanks = 0;
 		this.DAttRanks = 0;
 		this.DWitRanks = 0;
@@ -27,7 +24,6 @@ public class Player extends Record {
 	
 	public Player(String name) {
 		this.name = name;
-	//	this.team = null;
 		this.PAttRanks = 0; 
 		this.PWitRanks = 0;
 		this.DAttRanks = 0;

@@ -34,6 +34,7 @@ public abstract class UIConfigAction extends UIDataAction {
 	protected OptionsModel model;
 	
 	private Map<JComponent, String> compToAttrib;
+	private Map<String, Field> nameToField;
 	
 	public RecordDialogue dialog;
 	private Metamodel metamodel;
@@ -41,11 +42,13 @@ public abstract class UIConfigAction extends UIDataAction {
 	
 	@Override
 	public void attachToFrame(Window frame) {
+		super.attachToFrame(frame);
 		compileAttributes();
-		dialog = new RecordDialogue(frame, compToAttrib);
+		dialog = new RecordDialogue(frame, compToAttrib, nameToField);
 		dialog.addListenerToSubmit(submitButton());
 		dialog.setVisible(true);
 	}
+	
 
 	private ActionListener submitButton() {
 		return new ActionListener() {
@@ -76,6 +79,7 @@ public abstract class UIConfigAction extends UIDataAction {
 	private void compileAttributes() {
 		assertBound();
 		compToAttrib = new LinkedHashMap<JComponent, String>(); // must preserve order
+		nameToField = new LinkedHashMap<String, Field>();
 		metamodel = db.getEntityManager().getMetamodel();
 		entityType = metamodel.entity(getRecordType());
 		
@@ -99,6 +103,7 @@ public abstract class UIConfigAction extends UIDataAction {
 			
 			JComponent comp = Utils.ConfigUtils.createComponent(attribName, attrib, annotations, getRecord(), getValue(attribName), model);
 			compToAttrib.put(comp, attribName);
+			nameToField.put(attribName, f);
 		}
 	}
 	

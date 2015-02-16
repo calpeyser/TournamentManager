@@ -31,6 +31,15 @@ public class TournamentManager {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				Event eventOccured = frame.eventList.getSelectedValue();
+				
+				// make sure all actions have been taken
+				for (UIDataAction action : db.getContext().getCurrentState().getDuringConfig()) {
+					if (!action.isComplete()) {
+						System.out.println(action + " is not complete");
+						return;
+					}
+				}
+				
 				// execute exiting actions
 				for (AutomaticDataAction action : db.getContext().getCurrentState().getExitConfig()) {
 					action.bind(db);
@@ -54,7 +63,7 @@ public class TournamentManager {
 				frame.setState(newState);			
 			}
 		};
-	}
+	} 
 	
 	private ActionListener dynamicAction() {
 		return new ActionListener() {

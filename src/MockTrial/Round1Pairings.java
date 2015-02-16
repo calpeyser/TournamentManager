@@ -57,6 +57,10 @@ public class Round1Pairings extends AutomaticDataAction {
 		}
 		// now that we've matched everyone, put the matches in the database
 		for (Match m : matches) {
+			m.PTeam.opponents.add(m.DTeam);
+			m.DTeam.opponents.add(m.PTeam);
+			m.PTeam.wentP = true;
+			m.DTeam.wentP = false;
 			db.getEntityManager().getTransaction().begin();
 			db.getEntityManager().persist(m);
 			db.getEntityManager().getTransaction().commit();

@@ -22,6 +22,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 	
 	@Override
 	public void attachToFrame(Window frame) {
+		super.attachToFrame(frame);
 		data = new DBTableModel(db, getRecordType());
 		dialog = new TableDialog(frame, data);
 		dialog.addListenerToExit(exitButton());

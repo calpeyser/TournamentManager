@@ -15,4 +15,8 @@ public class AddPlayers extends UITableConfigAction {
 		return "Add players to the tournament";
 	}
 
+	@Override
+	public boolean isComplete() {
+		return true;
+	}
 }

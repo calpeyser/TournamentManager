@@ -20,5 +20,19 @@ public class EditMatches extends UITableEditOnlyAction {
 	protected OptionsModel getOptionsModel() {
 		return new MatchOptionsModel(Match.class, db);
 	}
-
+	
+	@Override
+	public boolean isComplete() {
+		if (data == null) {
+			return false;
+		}
+		for (Object o : data.data) {
+			Match m = (Match) o;
+			if (!m.isSet()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }

@@ -18,7 +18,16 @@ import javax.swing.*;
  */
 public abstract class UIDataAction extends DynamicDataAction {
 	
+	protected boolean isComplete;
+	
 	// throw the data action onto a from
-	public abstract void attachToFrame(Window frame);
+	public void attachToFrame(Window frame) {
+		isComplete = true;
+	}
+	
+	@Override
+	public boolean isComplete() {
+		return isComplete;
+	}
 	
 }

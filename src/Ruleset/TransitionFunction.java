@@ -27,6 +27,5 @@ public class TransitionFunction {
 	
 	public State transition(State fromState, Event event) {
 		return transition.get(fromState).get(event);
-	}
-	
+	}	
 }
