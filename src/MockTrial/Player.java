@@ -35,8 +35,4 @@ public class Player extends Record {
 		return name;
 	}
 
-	@Override
-	public boolean isSet() {
-		return true;
-	}
 }

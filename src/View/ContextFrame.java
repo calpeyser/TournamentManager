@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -134,6 +135,7 @@ public class ContextFrame extends JFrame {
 			visibleTab.addTab(v.getName(), p);
 			visiblePanels.put(v, p);
 		}		
+				
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				if (tabbedPane.getSelectedComponent() == visibleTab) {
@@ -158,7 +160,8 @@ public class ContextFrame extends JFrame {
 	private void refreshVisibles() {
 		for (Visible v : visiblePanels.keySet()) {
 			visiblePanels.get(v).removeAll();
-			visiblePanels.get(v).add(v.getComponent());
+			JComponent comp = v.getComponent();
+			visiblePanels.get(v).add(comp);
 		}
 	}
 		

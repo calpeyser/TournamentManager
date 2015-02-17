@@ -55,10 +55,5 @@ public class Team extends Record implements Comparable<Team> {
 			else {return 0;}
 		}
 	}
-
-	@Override
-	public boolean isSet() {
-		return true;
-	}
-	
+		
 }

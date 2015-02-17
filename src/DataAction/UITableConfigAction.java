@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.*;
 import java.util.*;
 
+import javax.persistence.TypedQuery;
+
 import Utils.MiscUtils;
 import View.*;
 import Base.*;
@@ -24,6 +26,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 	public void attachToFrame(Window frame) {
 		super.attachToFrame(frame);
 		data = new DBTableModel(db, getRecordType());
+		
 		dialog = new TableDialog(frame, data);
 		dialog.addListenerToExit(exitButton());
 		dialog.addListenerToDelete(deleteButton());
@@ -74,7 +77,7 @@ public abstract class UITableConfigAction extends UIDataAction {
 				
 				// create a UIConfigAction to attach to this thing
 				UIConfigAction configure = new UIInstanceConfigAction((Record)databaseObject, db, getOptionsModel());
-	
+				
 				// attach it
 				configure.attachToFrame(dialog);
 				data.fireTableDataChanged();

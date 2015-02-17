@@ -13,6 +13,8 @@ import javax.swing.event.ChangeListener;
 import java.util.*;
 
 import Base.*;
+import Check.Check;
+import Check.CheckFailedException;
 import Ruleset.*;
 import Data.*;
 import DataAction.*;
@@ -26,16 +28,23 @@ public class TournamentManager {
 	public ContextFrame frame;
 	private Ruleset ruleset;
 	private TournamentDataStore db;
+	private PopupDialog popup;
 		
 	private ActionListener stateChanger() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				Event eventOccured = frame.eventList.getSelectedValue();
 				
-				// make sure all actions have been taken
-				for (UIDataAction action : db.getContext().getCurrentState().getDuringConfig()) {
-					if (!action.isComplete()) {
-						System.out.println(action + " is not complete");
+				// perform exit checks
+				for (Check c : db.getContext().getCurrentState().getExitChecks()) {
+					c.bind(db);
+					try {
+						c.performCheck();
+					}
+					catch (CheckFailedException e) {
+						popup = new PopupDialog(frame, e.getMessage());
+						popup.addListenerToClose(closePopup());
+						popup.setVisible(true);	
 						return;
 					}
 				}
@@ -96,6 +105,14 @@ public class TournamentManager {
 		frame.addDynamicActions(dynamicAction());
 	}
 	
+	private ActionListener closePopup() {
+		return new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				popup.setVisible(false);
+				popup.dispose();
+			}
+		};
+	}
 	public static void main(String[] args) {
 
 		MockTrialTournamentFactory factory = new MockTrialTournamentFactory();

@@ -23,11 +23,5 @@ public abstract class UIDataAction extends DynamicDataAction {
 	// throw the data action onto a from
 	public void attachToFrame(Window frame) {
 		isComplete = true;
-	}
-	
-	@Override
-	public boolean isComplete() {
-		return isComplete;
-	}
-	
+	}	
 }

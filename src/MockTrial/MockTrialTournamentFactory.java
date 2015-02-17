@@ -5,6 +5,7 @@ import java.util.*;
 import javax.persistence.Query;
 
 import Base.Record;
+import Check.Check;
 import Data.*;
 import DataAction.*;
 import Ruleset.*;
@@ -30,6 +31,11 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 		
 		List<AutomaticDataAction> round1EntryActions = new ArrayList<AutomaticDataAction>();
 		round1EntryActions.add(new Round1Pairings());
+		round1EntryActions.add(new TestResolveMatches());
+		
+		List<AutomaticDataAction> round2EntryActions = new ArrayList<AutomaticDataAction>();
+		round2EntryActions.add(new Round2Pairings());
+		round2EntryActions.add(new TestResolveMatches());
 		
 		List<UIDataAction> roundActions = new ArrayList<UIDataAction>();
 		roundActions.add(new EditMatches());
@@ -38,14 +44,17 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 		roundEndActions.add(new ProcessMatches());
 		roundEndActions.add(new ClearMatches());
 		
+		List<Check> exitChecks = new ArrayList<Check>();
+		exitChecks.add(new MatchesResolved());
+		
 		
 		// states
-		State configure = new State("Initial Configuration", null, configActions, null);
-		State round1 = new State("Round One", round1EntryActions, roundActions, roundEndActions);
-		State round2 = new State("Round Two", null, null, null);
-		State round3 = new State("Round Three", null, null, null);
-		State round4 = new State("Round Four", null, null, null);
-		State end = new State("Tournament Finished", null, null, null);
+		State configure = new State("Initial Configuration", null, configActions, null, null);
+		State round1 = new State("Round One", round1EntryActions, roundActions, roundEndActions, exitChecks);
+		State round2 = new State("Round Two", round2EntryActions, roundActions, roundEndActions, exitChecks);
+		State round3 = new State("Round Three", null, null, null, null);
+		State round4 = new State("Round Four", null, null, null, null);
+		State end = new State("Tournament Finished", null, null, null, null);
 		List<State> states = new ArrayList<State>();
 		states.add(configure); states.add(round1); states.add(round2); states.add(round3);
 		states.add(round4); states.add(end);
@@ -87,7 +96,10 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 		
 		// visible
 		List<Visible> visibles = new ArrayList<Visible>();
+		visibles.add(new CurrentMatches());
 		visibles.add(new TeamRankings());
+		visibles.add(new TopAttorneys());
+		visibles.add(new TopWitnesses());
 		
 		return new Ruleset(states, configure, events, trans, configClasses, visibles);
 

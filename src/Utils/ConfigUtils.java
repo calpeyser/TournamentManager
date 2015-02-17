@@ -130,7 +130,7 @@ public class ConfigUtils {
 			out = new JScrollPane(list);
 		}
 		else {
-			throw new RuntimeException("Could not parse  type " + type.getName());
+			throw new RuntimeException("Could not parse type " + type.getName());
 		}
 		return out;
 	}

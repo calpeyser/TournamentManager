@@ -97,29 +97,7 @@ public class Match extends Record {
 	public Match(Team p, Team d) {
 		PTeam = p; DTeam = d;
 	}
-	
-	@Override 
-	public boolean isSet() {
-		List<Player> rankedPlayers = new ArrayList<Player>();
-		rankedPlayers.add(Ballot1Att1); rankedPlayers.add(Ballot1Att2); rankedPlayers.add(Ballot1Att3); rankedPlayers.add(Ballot1Att4);
-		rankedPlayers.add(Ballot2Att1); rankedPlayers.add(Ballot2Att2); rankedPlayers.add(Ballot2Att3); rankedPlayers.add(Ballot2Att4);
-		rankedPlayers.add(Ballot1Wit1); rankedPlayers.add(Ballot1Wit2); rankedPlayers.add(Ballot1Wit3); rankedPlayers.add(Ballot1Wit4);
-		rankedPlayers.add(Ballot2Wit1); rankedPlayers.add(Ballot2Wit2); rankedPlayers.add(Ballot2Wit3); rankedPlayers.add(Ballot2Wit4);
-
-		for (Player p : rankedPlayers) {
-			if (p == null) {return false;}
-		}
-	
-		List<Player> duplicateChecker = new ArrayList<Player>();
-		for (Player p : rankedPlayers) {
-			if (duplicateChecker.contains(p)) {
-				return false;
-			}
-			duplicateChecker.add(p);
-		}
-		return true;
-	}
-	
+		
 	@Override 
 	public String toString() {
 		return "Match between " + this.PTeam + " and " + this.DTeam;

@@ -48,11 +48,4 @@ public class UIInstanceConfigAction extends UIConfigAction {
 	public String description() {
 		return "Configure " + instance;
 	}
-
-	@Override
-	public boolean isComplete() {
-		// TODO: Implement something logical for this.
-		return true;
-	}
-
 }

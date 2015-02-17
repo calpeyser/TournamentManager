@@ -6,7 +6,6 @@ import DataAction.ExcelDataAction;
 
 public class MTExcelConfig extends ExcelDataAction {
 
-	private boolean isSet;
 	
 	@Override
 	protected void performConfiguration() {
@@ -26,17 +25,10 @@ public class MTExcelConfig extends ExcelDataAction {
 			db.getEntityManager().persist(team);
 			db.getEntityManager().getTransaction().commit();
 		}
-		isSet = true;
 	}
 
 	@Override
 	public String description() {
 		return "Configure Players and Teams from Spreadsheet";
 	}
-
-	@Override
-	public boolean isComplete() {
-		return isSet;
-	}
-
 }
