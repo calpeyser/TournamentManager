@@ -20,13 +20,9 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 	public Ruleset makeRuleset() {
 
 		// actions
-		UIDataAction configurePlayers = new AddPlayers();
-		UIDataAction configureTeams   = new AddTeams();
 		UIDataAction excelConfig = new MTExcelConfig();
 		
 		List<UIDataAction> configActions = new ArrayList<UIDataAction>();
-		configActions.add(configurePlayers);
-		configActions.add(configureTeams);
 		configActions.add(excelConfig);
 		
 		List<AutomaticDataAction> round1EntryActions = new ArrayList<AutomaticDataAction>();
@@ -37,8 +33,13 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 		round2EntryActions.add(new Round2Pairings());
 		round2EntryActions.add(new TestResolveMatches());
 		
+		List<AutomaticDataAction> round3EntryActions = new ArrayList<AutomaticDataAction>();
+		round3EntryActions.add(new Round3Pairings());
+		round3EntryActions.add(new TestResolveMatches());
+		
 		List<UIDataAction> roundActions = new ArrayList<UIDataAction>();
 		roundActions.add(new EditMatches());
+		roundActions.add(new MTExcelConfigDebug());
 		
 		List<AutomaticDataAction> roundEndActions = new ArrayList<AutomaticDataAction>();
 		roundEndActions.add(new ProcessMatches());
@@ -52,8 +53,8 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 		State configure = new State("Initial Configuration", null, configActions, null, null);
 		State round1 = new State("Round One", round1EntryActions, roundActions, roundEndActions, exitChecks);
 		State round2 = new State("Round Two", round2EntryActions, roundActions, roundEndActions, exitChecks);
-		State round3 = new State("Round Three", null, null, null, null);
-		State round4 = new State("Round Four", null, null, null, null);
+		State round3 = new State("Round Three", round3EntryActions, roundActions, roundEndActions, exitChecks);
+		State round4 = new State("Round Four", round2EntryActions, roundActions, roundEndActions, exitChecks);
 		State end = new State("Tournament Finished", null, null, null, null);
 		List<State> states = new ArrayList<State>();
 		states.add(configure); states.add(round1); states.add(round2); states.add(round3);

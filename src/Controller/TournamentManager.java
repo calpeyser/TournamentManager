@@ -34,6 +34,9 @@ public class TournamentManager {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				Event eventOccured = frame.eventList.getSelectedValue();
+				if (eventOccured == null) {
+					return;
+				}
 				
 				// perform exit checks
 				for (Check c : db.getContext().getCurrentState().getExitChecks()) {
@@ -78,6 +81,9 @@ public class TournamentManager {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				UIDataAction actionToPerform = frame.actionList.getSelectedValue();
+				if (actionToPerform == null) {
+					return;
+				}
 				// open the dialogue 
 				actionToPerform.bind(db);
 				actionToPerform.attachToFrame(frame);

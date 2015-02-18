@@ -20,7 +20,7 @@ public class TeamRankings extends TableVisible {
 
 	@Override
 	public Object[] getColumnNames() {
-		String[] out = {"School Name", "Designation", "Score", "CS", "Point Differential"};
+		String[] out = {"School Name", "Designation", "Score", "CS", "Point Differential", "Went P"};
 		return out;
 	}
 
@@ -35,7 +35,7 @@ public class TeamRankings extends TableVisible {
 		List<Team> allTeams = q.getResultList();
 
 		Collections.sort(allTeams);
-		Object[][] out = new Object[allTeams.size()][5];
+		Object[][] out = new Object[allTeams.size()][6];
 		for (int teamIndex = 0; teamIndex < allTeams.size(); teamIndex++) {
 			Team t = allTeams.get(teamIndex);
 			out[teamIndex][0] = t.schoolName;
@@ -43,6 +43,7 @@ public class TeamRankings extends TableVisible {
 			out[teamIndex][2] = t.score;
 			out[teamIndex][3] = t.CombinedStrength;
 			out[teamIndex][4] = t.PointDifferential;
+			out[teamIndex][5] = t.wentP;
 		}
 		return out;
 	}

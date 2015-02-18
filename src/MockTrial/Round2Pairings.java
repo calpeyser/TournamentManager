@@ -44,6 +44,11 @@ public class Round2Pairings extends AutomaticDataAction {
 		}
 		
 		@Override 
+		public String toString() {
+			return "Match between " + t1 + " and " + t2;
+		}
+		
+		@Override 
 		public boolean equals(Object o) {
 			Swap that;
 			try {
@@ -191,11 +196,11 @@ public class Round2Pairings extends AutomaticDataAction {
 
 				while(canditatesForSwapWithP.size() + canditatesForSwapWithD.size() == 0) {
 					lookDistance++;
-					if (index >= lookDistance - 1) {
+					if (index > lookDistance - 1) {
 						if (!haveSwapped.contains(PTeams.get(index - lookDistance))) {canditatesForSwapWithP.put(PTeams.get(index - lookDistance), index - lookDistance);}
 						if (!haveSwapped.contains(DTeams.get(index - lookDistance))) {canditatesForSwapWithD.put(DTeams.get(index - lookDistance), index - lookDistance);}
 					}
-					if (index <= PTeams.size() - lookDistance) {
+					if (index < PTeams.size() - lookDistance) {
 						if (!haveSwapped.contains(PTeams.get(index + lookDistance))) {canditatesForSwapWithP.put(PTeams.get(index + lookDistance), index - lookDistance);}
 						if (!haveSwapped.contains(DTeams.get(index + lookDistance))) {canditatesForSwapWithD.put(DTeams.get(index + lookDistance), index - lookDistance);}
 					}
@@ -203,6 +208,7 @@ public class Round2Pairings extends AutomaticDataAction {
 				// find best swap
 				Swap bestSwap = bestSwap(canditatesForSwapWithP, canditatesForSwapWithD, PTeams.get(index), DTeams.get(index));
 				swaps.add(bestSwap);
+				haveSwapped.add(bestSwap.t1); haveSwapped.add(bestSwap.t2);
 				bestSwap.execute(PTeams, DTeams);
 				index = 0;
 			}
@@ -210,11 +216,11 @@ public class Round2Pairings extends AutomaticDataAction {
 				index ++;
 			}
 		}
-
-		
 		// set up matches
 		for (int rank = 0; rank < PTeams.size(); rank++) {
 			Match m = new Match(PTeams.get(rank), DTeams.get(rank));
+			PTeams.get(rank).opponents.add(DTeams.get(rank));
+			DTeams.get(rank).opponents.add(PTeams.get(rank));
 			db.getEntityManager().getTransaction().begin();
 			db.getEntityManager().persist(m);
 			db.getEntityManager().getTransaction().commit();

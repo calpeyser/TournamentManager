@@ -12,7 +12,7 @@ import javax.persistence.criteria.*;
  */
 public class Round1Pairings extends AutomaticDataAction {
 
-	private Queue<Team> getTeams() {
+	private Queue<Team> getTeamsQueue() {
 		CriteriaBuilder cb = db.getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Team> cq = cb.createQuery(Team.class);
 		Root<Team> root = cq.from(Team.class);
@@ -28,7 +28,7 @@ public class Round1Pairings extends AutomaticDataAction {
 	// randomly pair teams
 	@Override
 	public void execute() {
-		Queue<Team> teams = getTeams();
+		Queue<Team> teams = getTeamsQueue();
 		List<Match> matches = new ArrayList<Match>();
 		while(teams.size() != 0) {
 			assert(teams.size() % 2 == 0);  // must have an even number of teams
@@ -40,19 +40,9 @@ public class Round1Pairings extends AutomaticDataAction {
 				continue;
 			}
 			else {
-				teams.add(canditate1);
-				teams.add(canditate2);
-				if (teams.size() != 0) {
-					randomizeQueue(teams);
-					continue;
-				}
-				else {
-					System.out.println("looping");
-					teams = getTeams();
-					randomizeQueue(teams);
-					matches = new ArrayList<Match>();
-					continue;
-				}
+				teams = getTeamsQueue();
+				randomizeQueue(teams);
+				matches = new ArrayList<Match>();
 			}
 		}
 		// now that we've matched everyone, put the matches in the database

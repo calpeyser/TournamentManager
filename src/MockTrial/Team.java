@@ -13,7 +13,7 @@ public class Team extends Record implements Comparable<Team> {
 	@Basic @MustBeSet public String designation; // for this tournament.  Ex. "936"
 	@OneToMany (targetEntity = Player.class) @MustBeSet public List<Player> players;
 	
-	@Basic public int CombinedStrength;
+	@Basic public double CombinedStrength;
 	@Basic public int PointDifferential;
 	@Basic public double score;
 	
