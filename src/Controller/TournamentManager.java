@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import java.nio.file.*;
 
 import javax.persistence.Query;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -36,6 +37,11 @@ public class TournamentManager {
 				Event eventOccured = frame.eventList.getSelectedValue();
 				if (eventOccured == null) {
 					return;
+				}
+				
+				int reply = JOptionPane.showConfirmDialog(frame, "Are you sure you want to invoke event " + eventOccured + "?", "Invoke Event?",  JOptionPane.YES_NO_OPTION);
+				if (reply != JOptionPane.YES_OPTION) {
+				   return;
 				}
 				
 				// perform exit checks
@@ -119,30 +125,19 @@ public class TournamentManager {
 			}
 		};
 	}
-	public static void main(String[] args) {
-
-		MockTrialTournamentFactory factory = new MockTrialTournamentFactory();
+	
+	public static void createNewTourament(TournamentFactory factory, String path) {
 		Ruleset ruleset = factory.makeRuleset();
-		TournamentDataStore dbinit = null; 
-		if (args.length == 0) {
-			dbinit = factory.makeDB(ruleset);
-			dbinit.cleanFiles();
-		}
-		else {
-			dbinit = factory.makeDB(ruleset, args[0]);
-		}
-		
-		final TournamentDataStore db = dbinit;
-		
+		TournamentDataStore db = factory.makeNewDB(ruleset, path);
 		TournamentManager tm = new TournamentManager(ruleset, db);
-		/*tm.frame.addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent e) {
-				db.wipeDataStore();
-				e.getWindow().dispose();
-			}
-		});*/
-		tm.frame.setVisible(true);
+		tm.frame.setVisible(true);	
+
 	}
+	
+	public static void recoverTournament(TournamentFactory factory, String path) {
+		Ruleset ruleset = factory.makeRuleset();
+		TournamentDataStore db = factory.recoverDB(ruleset, path); 
+		TournamentManager tm = new TournamentManager(ruleset, db);
+		tm.frame.setVisible(true);	
+	}	
 }

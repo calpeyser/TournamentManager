@@ -19,8 +19,8 @@ import Data.TournamentDataStore;
 public abstract class DefaultTournamentFactory extends TournamentFactory {
 
 	@Override
-	public TournamentDataStore makeDB(Ruleset r) {
-		TournamentDataStore db = new ObjectDBDataStore("$objectdb/db/Database.odb");
+	public TournamentDataStore makeNewDB(Ruleset r, String directoryPath) {
+		TournamentDataStore db = new ObjectDBDataStore(directoryPath + "/Database.odb");
 		db.wipeDataStore();
 		db.setContext(new TournamentContext(r.getStartState()));	
 				
@@ -28,7 +28,7 @@ public abstract class DefaultTournamentFactory extends TournamentFactory {
 	}
 
 	@Override
-	public TournamentDataStore makeDB(Ruleset r, String filepath) {
+	public TournamentDataStore recoverDB(Ruleset r, String filepath) {
 		TournamentDataStore db = new ObjectDBDataStore(filepath);
 		
 		// set up the current state

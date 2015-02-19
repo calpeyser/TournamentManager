@@ -267,9 +267,13 @@ public class Round3Pairings extends AutomaticDataAction {
 			Match m;
 			if (P) {
 				m = new Match(Teams1.get(rank), Teams2.get(rank));
+				Teams1.get(rank).wentP = true;
+				Teams2.get(rank).wentP = false;
 			}
 			else {
 				m = new Match(Teams2.get(rank), Teams1.get(rank));
+				Teams1.get(rank).wentP = false;
+				Teams2.get(rank).wentP = true;
 			}
 			Teams1.get(rank).opponents.add(Teams1.get(rank));
 			Teams1.get(rank).opponents.add(Teams2.get(rank));
