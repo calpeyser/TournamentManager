@@ -6,6 +6,10 @@ import Visibles.Visible;
 import Base.*;
 
 public class Ruleset {
+	
+	/** What's this called? */
+	protected String name;
+	
 	/** All the states that can be taken during execution */
 	protected List<State> states;
 	
@@ -24,18 +28,24 @@ public class Ruleset {
 	/** The visible state of the tournament */
 	protected List<Visible> visibles;
 	
-	public Ruleset(List<State> states,
+	public Ruleset(String name,
+				   List<State> states,
 			       State startState,
 			       List<Event> events,
 			       TransitionFunction transitionFunction,
 			       List<Class<? extends Record>> configClasses,
 			       List<Visible> visibles) {
+		this.name = name;
 		this.states = states;
 		this.startState = startState;
 		this.events = events;
 		this.transitionFunction = transitionFunction;
 		this.configClasses = configClasses;
 		this.visibles = visibles;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public State getStartState() {
@@ -57,5 +67,10 @@ public class Ruleset {
 			}
 		}
 		throw new RuntimeException("Could not find state named " + stateName);
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }

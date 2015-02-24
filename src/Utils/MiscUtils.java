@@ -50,4 +50,11 @@ public class MiscUtils {
 		throw new RuntimeException("Could not get target Entity");
 	}
 	
+	// found this on StackOverflow: http://stackoverflow.com/questions/2152742/java-swing-multiline-labels
+	public static String convertToMultiline(String orig)
+	{
+	    return "<html>" + orig.replaceAll("\n", "<br>");
+	}
+	
+	
 }

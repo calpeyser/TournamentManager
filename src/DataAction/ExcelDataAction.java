@@ -35,7 +35,7 @@ public abstract class ExcelDataAction extends UIDataAction {
 	protected XSSFWorkbook workbook;
 	
 	public void attachToFrame(Window frame) {
-		JFileChooser fileChooser = new JFileChooser(".");
+		JFileChooser fileChooser = new JFileChooser();
 		int status = fileChooser.showOpenDialog(frame);
 		
 		if (status == JFileChooser.APPROVE_OPTION) {

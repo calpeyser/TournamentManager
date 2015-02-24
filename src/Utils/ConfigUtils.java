@@ -32,7 +32,6 @@ import javax.swing.SpinnerNumberModel;
 import Base.Record;
 import Data.TournamentDataStore;
 import DataAction.OptionsModel;
-import Model.MockPlayer;
 
 public class ConfigUtils {
 	/**

@@ -102,7 +102,7 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 		visibles.add(new TopAttorneys());
 		visibles.add(new TopWitnesses());
 		
-		return new Ruleset(states, configure, events, trans, configClasses, visibles);
+		return new Ruleset("AMTA Mock Trial", states, configure, events, trans, configClasses, visibles);
 
 	}
 }

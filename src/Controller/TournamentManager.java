@@ -19,10 +19,8 @@ import Check.CheckFailedException;
 import Ruleset.*;
 import Data.*;
 import DataAction.*;
-import Model.*;
 import View.*;
 import Visibles.*;
-import MockTrial.*; // gonna try to repurpose this...
 
 public class TournamentManager {
 	

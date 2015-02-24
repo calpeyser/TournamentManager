@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFileChooser;
 
-import MockTrial.MockTrialTournamentFactory;
+import MockTrial.MockTrialTournamentFactory; // TODO: GET RID OF THIS WHEN DONE TESTING
 import Ruleset.TournamentFactory;
 import View.*;
 
@@ -14,16 +14,16 @@ public class Control {
 	private HomeFrame frame;
 	private TournamentFactory factory;
 	
-	public Control() {
-		frame = new HomeFrame();
+	public Control(TournamentFactory factory) {
+		this.factory = factory;
+		frame = new HomeFrame(factory.makeRuleset().getName());
 		frame.addListenerToNewTournament(newTournament());
 		frame.addListenerToContinueTournament(continueTournament());
 	}
 	
 	
 	public static void runTournament(TournamentFactory factory) {
-		Control c = new Control();
-		c.factory = factory;
+		Control c = new Control(factory);
 		c.frame.setVisible(true);
 	}
 	
@@ -61,10 +61,12 @@ public class Control {
 
 	public static void run(TournamentFactory factory) {
 		runTournament(factory);
-	}
+	}	
 	
+	/**
+	 * Testing on MockTrial
+	 */
 	public static void main(String[] args) {
-		runTournament(new MockTrialTournamentFactory());
+		run(new MockTrialTournamentFactory());
 	}
-	
 }
