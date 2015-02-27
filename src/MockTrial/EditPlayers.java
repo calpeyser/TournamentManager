@@ -1,18 +1,18 @@
 package MockTrial;
 
 import Base.Record;
-import DataAction.UITableConfigAction;
+import DataAction.UITableEditOnlyAction;
 
-public class AddTeams extends UITableConfigAction {
+public class EditPlayers extends UITableEditOnlyAction {
 
 	@Override
 	protected Class<? extends Record> getRecordType() {
-		return Team.class;
+		return Player.class;
 	}
 
 	@Override
 	public String description() {
-		return "Add Teams to the Tournament";
-	}	
+		return "Edit Players in Database";
+	}
 
 }

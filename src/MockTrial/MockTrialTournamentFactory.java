@@ -19,27 +19,29 @@ public class MockTrialTournamentFactory extends DefaultTournamentFactory {
 	@Override
 	public Ruleset makeRuleset() {
 
-		// actions
-		UIDataAction excelConfig = new MTExcelConfig();
-		
+		// actions		
 		List<UIDataAction> configActions = new ArrayList<UIDataAction>();
-		configActions.add(excelConfig);
+		configActions.add(new MTExcelConfig());
+		configActions.add(new AddTeams());
+		configActions.add(new AddPlayers());
 		
 		List<AutomaticDataAction> round1EntryActions = new ArrayList<AutomaticDataAction>();
 		round1EntryActions.add(new Round1Pairings());
-		round1EntryActions.add(new TestResolveMatches());
+		//round1EntryActions.add(new TestResolveMatches());
 		
 		List<AutomaticDataAction> round2EntryActions = new ArrayList<AutomaticDataAction>();
 		round2EntryActions.add(new Round2Pairings());
-		round2EntryActions.add(new TestResolveMatches());
+		//round2EntryActions.add(new TestResolveMatches());
 		
 		List<AutomaticDataAction> round3EntryActions = new ArrayList<AutomaticDataAction>();
 		round3EntryActions.add(new Round3Pairings());
-		round3EntryActions.add(new TestResolveMatches());
+		//round3EntryActions.add(new TestResolveMatches());
 		
 		List<UIDataAction> roundActions = new ArrayList<UIDataAction>();
 		roundActions.add(new EditMatches());
-		roundActions.add(new MTExcelConfigDebug());
+		roundActions.add(new EditTeams());
+		roundActions.add(new EditPlayers());
+		//roundActions.add(new MTExcelConfigDebug());
 		
 		List<AutomaticDataAction> roundEndActions = new ArrayList<AutomaticDataAction>();
 		roundEndActions.add(new ProcessMatches());

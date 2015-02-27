@@ -1,9 +1,9 @@
 package MockTrial;
 
 import Base.Record;
-import DataAction.UITableConfigAction;
+import DataAction.UITableEditOnlyAction;
 
-public class AddTeams extends UITableConfigAction {
+public class EditTeams extends UITableEditOnlyAction {
 
 	@Override
 	protected Class<? extends Record> getRecordType() {
@@ -12,7 +12,7 @@ public class AddTeams extends UITableConfigAction {
 
 	@Override
 	public String description() {
-		return "Add Teams to the Tournament";
-	}	
+		return "Edit Teams in Database";
+	}
 
 }

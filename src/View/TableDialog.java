@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JWindow;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 
@@ -41,6 +42,8 @@ public class TableDialog extends JDialog {
 		
 		table = new JTable(data);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
 		JScrollPane tableScrollPane = new JScrollPane(table);
 		
 		JPanel buttonPane = new JPanel();

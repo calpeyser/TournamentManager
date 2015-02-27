@@ -12,7 +12,7 @@ public class AddPlayers extends UITableConfigAction {
 
 	@Override
 	public String description() {
-		return "Add players to the tournament";
+		return "Add Players to the Tournament";
 	}
 	
 }

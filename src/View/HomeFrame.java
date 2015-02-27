@@ -1,6 +1,8 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -8,10 +10,13 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
@@ -27,37 +32,47 @@ public class HomeFrame extends JFrame {
 	public PathChooserDialog pathChooser;
 
 	public HomeFrame(String tournamentName) {
-		super(tournamentName);
+		super(tournamentName + ": Data Selection");
 		frame = this;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		setContentPane(contentPane);
+		setBounds(100, 100, 600, 250);
+		contentPane = new JPanel(); 
+		contentPane.setLayout(new BorderLayout());
+		getContentPane().add(contentPane);
 		
-		JLabel title = new JLabel("Tournament Management for " + tournamentName, SwingConstants.CENTER);
-		title.setFont(new Font("Serif", Font.PLAIN, 16));
-		c.gridx = 0; c.gridy = 0; c.gridwidth = 2;
-		contentPane.add(title, c);
+		JPanel buttonsPane = new JPanel();
+		buttonsPane.setLayout(new BoxLayout(buttonsPane, BoxLayout.PAGE_AXIS));
+		contentPane.add(new JScrollPane(buttonsPane), BorderLayout.CENTER);		
+		
+		JPanel textPane = new JPanel();
+		textPane.setLayout(new BoxLayout(textPane, BoxLayout.PAGE_AXIS));
+		contentPane.add(textPane, BorderLayout.SOUTH);
+		
+		
+		buttonsPane.add(Box.createRigidArea(new Dimension(0, 30)));
 		
 		newTournamentButton = new JButton("New Tournament");
-		c.gridx = 0; c.gridy = 1; c.gridwidth = 1;
-		contentPane.add(newTournamentButton, c);
+		newTournamentButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		buttonsPane.add(newTournamentButton);
+
+		buttonsPane.add(Box.createRigidArea(new Dimension(0, 30)));
+		
 		continueTournamentButton = new JButton("Continue Tournament");
-		c.gridx = 1; c.gridy = 1;
-		contentPane.add(continueTournamentButton, c);
+		continueTournamentButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		buttonsPane.add(continueTournamentButton);
 		
-		JLabel newExplination = new JLabel(MiscUtils.convertToMultiline("Select a directory in which data\n for a new tournament will be saved."), SwingConstants.CENTER);
-		newExplination.setFont(new Font("Serif", Font.PLAIN, 12));
-		c.gridx = 0; c.gridy = 2;
-		contentPane.add(newExplination, c);
+		JLabel title = new JLabel("Touranment Management for " + tournamentName, SwingConstants.CENTER);
+		title.setFont(new Font("Dialog", Font.PLAIN, 20));
+		contentPane.add(title, BorderLayout.NORTH);
+
+		JLabel explanation1 = new JLabel("Start a new tournament to select a directory in which to store tournament snapshots.", SwingConstants.CENTER);
+		explanation1.setFont(new Font("Dialog", Font.PLAIN, 12));
+		textPane.add(explanation1);
 		
-		JLabel continueExplination = new JLabel(MiscUtils.convertToMultiline("Select a database from which\n to continue a tournament."), SwingConstants.CENTER);
-		continueExplination.setFont(new Font("Serif", Font.PLAIN, 12));
-		c.gridx = 1; c.gridy = 2; 
-		contentPane.add(continueExplination, c);
+		JLabel explanation2 = new JLabel("Continue a tournament to select a tournament snapshot to continue from.", SwingConstants.CENTER);
+		explanation2.setFont(new Font("Dialog", Font.PLAIN,  12));
+		textPane.add(explanation2);
+		
 	}
 	
 	public void addListenerToNewTournament(ActionListener listener) {

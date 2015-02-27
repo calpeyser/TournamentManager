@@ -1,36 +1,15 @@
 package Utils;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.*;
 import javax.persistence.metamodel.Attribute;
-import javax.swing.DefaultListModel;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerListModel;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 
+import View.CustomDoubleField;
+import View.JNumberTextField;
 import Base.Record;
-import Data.TournamentDataStore;
 import DataAction.OptionsModel;
 
 public class ConfigUtils {
@@ -43,7 +22,10 @@ public class ConfigUtils {
 		Map<String, Object> out = new HashMap<String, Object>();
 		for (JComponent comp : compToAttrib.keySet()) {
 			Object value = null;
-			if (comp.getClass() == JTextField.class) {
+			if (comp.getClass() == CustomDoubleField.class) {
+				value = ((CustomDoubleField)comp).getDoubleValue();
+			}
+			else if (comp.getClass() == JTextField.class) {
 				value = ((JTextField)comp).getText();
 			}
 			else if (comp.getClass() == JToggleButton.class) {
@@ -94,6 +76,11 @@ public class ConfigUtils {
 				typedOut.setValue(value);
 				out = (JComponent) typedOut;
 			}
+		}
+		else if (type == double.class) {
+			CustomDoubleField typedOut = new CustomDoubleField();
+			typedOut.setDouble((double) value);
+			out = (JComponent) typedOut;
 		}
 		// one-to-one
 		else if (type.isAnnotationPresent(Entity.class)) {

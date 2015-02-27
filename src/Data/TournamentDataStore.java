@@ -18,6 +18,8 @@ public interface TournamentDataStore {
 	
 	public void save();
 	
+	public void save(String filename);
+	
 	public void cleanFiles();
 
 }

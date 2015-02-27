@@ -14,8 +14,20 @@ public class MTExcelConfig extends ExcelDataAction {
 		for (Row r : sheet) {
 			db.getEntityManager().getTransaction().begin();
 			Team team = new Team();
+			int designationType = r.getCell(0).getCellType();
+			if (designationType == Cell.CELL_TYPE_NUMERIC) {
+				Double value = r.getCell(0).getNumericCellValue();
+				if (value == Math.round(value)) {
+					team.designation = Integer.toString(value.intValue());
+				}
+				else {
+					team.designation = Double.toString(r.getCell(0).getNumericCellValue());
+				}
+			}
+			else {
+				team.designation = r.getCell(0).getStringCellValue();
+			}
 			team.schoolName = r.getCell(1).getStringCellValue();
-			team.designation = r.getCell(0).getStringCellValue();
 			String[] playerNames = r.getCell(2).getStringCellValue().split(",");
 			for (String playerName : playerNames) {
 				Player p = new Player(playerName); 

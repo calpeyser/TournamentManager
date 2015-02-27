@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 
 public @interface FormFormat {
 	String tab();
+	boolean canBeChanged() default true;
 }

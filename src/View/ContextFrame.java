@@ -1,16 +1,23 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.Font;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -22,6 +29,7 @@ import javax.swing.JLabel;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import Data.*;
@@ -45,10 +53,19 @@ public class ContextFrame extends JFrame {
 	private JPanel actionTab;
 	private JTabbedPane visibleTab;
 	private Map<Visible, JPanel> visiblePanels;
-
+	
+	// stuff for events panel
+	private JPanel eventsPanel;
+	public Event selectedEvent;
+	private ActionListener eventListener;
+	
+	// stuff for actions panel
+	private JPanel actionPanel;
+	public UIDataAction selectedAction;
+	private ActionListener dataActionListener;
+	
 	// buttons
-	public JButton btnDoAction;
-	public JButton btnDynamicAction;
+	private JButton saveButton;
 	
 	// dynamic information stores
 	public DefaultListModel<Event> nextEventsModel;
@@ -64,16 +81,19 @@ public class ContextFrame extends JFrame {
 	private TournamentContext context;
 
 	public void addListenerToEvent(ActionListener listener) {
-		btnDoAction.addActionListener(listener);
+		this.eventListener = listener;
 	}
 	
 	public void addDynamicActions(ActionListener listener) {
-		btnDynamicAction.addActionListener(listener);
+		this.dataActionListener = listener;
 	}
 	
+	public void addListenerToSave(ActionListener listener) {
+		this.saveButton.addActionListener(listener);
+	}
 	
 	public ContextFrame(TournamentContext context, Ruleset ruleset) {
-		super("Tournament Manager");
+		super("Tournament Manager for " + ruleset.getName());
 		
 		// set local variables
 		this.ruleset = ruleset;
@@ -90,41 +110,59 @@ public class ContextFrame extends JFrame {
 		actionTab = new JPanel();
 		actionTab.setLayout(new BorderLayout());
 		visibleTab = new JTabbedPane();
-		tabbedPane.addTab("Current Tournament State", stateTab);
-		tabbedPane.addTab("Available Configuration Actions", actionTab);
-		tabbedPane.addTab("Tournament Stats", visibleTab);
+		tabbedPane.addTab("State Management", stateTab);
+		tabbedPane.addTab("Data Management", actionTab);
+		tabbedPane.addTab("Statistics", visibleTab);
 		
 		getContentPane().add(tabbedPane);
 		
+		// STATE TAB ----------------------------------------------
+		
 		// Tells current state
-		currentStateLabel = new JLabel();
+		currentStateLabel = new JLabel("", SwingConstants.CENTER);
+		currentStateLabel.setFont(new Font("Dialog", Font.PLAIN, 24));
 		stateTab.add(currentStateLabel, BorderLayout.PAGE_START);
-		
-		// executes event
-		btnDoAction = new JButton("Select Event");
-		stateTab.add(btnDoAction, BorderLayout.LINE_END);
 				
-		// lists all available actions
-		nextEventsModel = new DefaultListModel<Event>();
-		eventList = new JList<Event>(nextEventsModel);
-		eventList.setLayoutOrientation(JList.VERTICAL_WRAP);
-		eventList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		stateTab.add(eventList, BorderLayout.CENTER);
+		// instructions
+		JPanel instructionsPanel = new JPanel();
+		instructionsPanel.setLayout(new BorderLayout());
+		JLabel instructionsLabel = new JLabel("Continue the tournament by choosing an event from this panel.", SwingConstants.CENTER);
+		instructionsLabel.setFont(new Font("Dialog", Font.PLAIN, 14));
+		instructionsPanel.add(instructionsLabel, BorderLayout.WEST);
+		saveButton = new JButton("Save");
+		instructionsPanel.add(saveButton, BorderLayout.EAST);
+		stateTab.add(instructionsPanel, BorderLayout.PAGE_END);
+		
+		// lists all available events
+		eventsPanel = new JPanel();
+		eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.PAGE_AXIS));
 
+		JScrollPane eventsPane = new JScrollPane(eventsPanel);	
+		stateTab.add(eventsPane, BorderLayout.CENTER);
 		
-		// button to perform the UI action
-		btnDynamicAction = new JButton("Perform Dynamic Configuration");
-		actionTab.add(btnDynamicAction, BorderLayout.LINE_END);
+		// ACTION TAB ----------------------------------------------
 		
-		dataActionsModel = new DefaultListModel<UIDataAction>();
+		// UI action panel
+		actionPanel = new JPanel();
+		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.PAGE_AXIS));
 		
-		actionList = new JList<UIDataAction>(dataActionsModel);
-		actionList.setLayoutOrientation(JList.VERTICAL_WRAP);
-		actionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		actionTab.add(actionList, BorderLayout.CENTER);
+		JScrollPane actionPane = new JScrollPane(actionPanel);
+		actionTab.add(actionPane, BorderLayout.CENTER);				
+
+		// title 
+		JLabel actionTitleLabel = new JLabel("Available Data Actions", SwingConstants.CENTER);
+		actionTitleLabel.setFont(new Font("Dialog", Font.PLAIN, 24));
+		actionTab.add(actionTitleLabel, BorderLayout.PAGE_START);
 		
+		// instructions
+		JLabel actionInstructionsLabel = new JLabel("Manage tournament data by selecting an action from this panel.", SwingConstants.CENTER);
+		actionInstructionsLabel.setFont(new Font("Dialog", Font.PLAIN, 14));
+		actionTab.add(actionInstructionsLabel, BorderLayout.PAGE_END);
 		// state starts at beginning state given in ruleset
 		setState(context.getCurrentState());
+
+		
+		// VISIBLE TAB ----------------------------------------------
 		
 		// visibleTab has all the visible data to give stats on the tournament
 		visiblePanels = new HashMap<Visible, JPanel>();
@@ -147,14 +185,37 @@ public class ContextFrame extends JFrame {
 
 	public void setState(State s) {
 		currentStateLabel.setText("Current State: " + s.getName());
-		nextEventsModel.removeAllElements();
-		for (Event e : ruleset.getTransitionFunction().getPossibleEvents(context.getCurrentState())) {
-			nextEventsModel.addElement(e);
+		eventsPanel.removeAll();
+		for (final Event e : ruleset.getTransitionFunction().getPossibleEvents(s)) {
+			JButton button = new JButton(e.getName());
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent actionEvent) {
+					selectedEvent = e;
+					eventListener.actionPerformed(actionEvent);
+				}
+			});
+			button.setAlignmentX(Component.CENTER_ALIGNMENT);
+			eventsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+			eventsPanel.add(button);
 		}
-		dataActionsModel.removeAllElements();
-		for (UIDataAction a : context.getCurrentState().getDuringConfig()) {
-			dataActionsModel.addElement(a);
+		
+		actionPanel.removeAll();
+		for (final UIDataAction a : context.getCurrentState().getDuringConfig()) {
+			JButton button = new JButton(a.toString());
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent actionEvent) {
+					selectedAction = a;
+					dataActionListener.actionPerformed(actionEvent);
+				}
+			});
+			button.setAlignmentX(Component.CENTER_ALIGNMENT);
+			actionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+			actionPanel.add(button);
 		}
+		
+		this.revalidate();
+		this.repaint();
+
 	}
 	
 	private void refreshVisibles() {

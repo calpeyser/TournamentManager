@@ -87,6 +87,41 @@ public class ObjectDBDataStore implements TournamentDataStore {
 	}
 	
 	@Override 
+	public void save(String filename) {
+		// tell the database that we are in a new state
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<State> cq = cb.createQuery(State.class);
+		Root<State> r = cq.from(State.class);
+		cq.select(r);
+		TypedQuery<State> q = em.createQuery(cq);
+				
+		List<State> oldStates = q.getResultList();
+		em.getTransaction().begin();
+		for (State s : oldStates) {
+			em.remove(s);
+		}
+		em.persist(context.getCurrentState());
+		em.getTransaction().commit();
+		
+		String newPath = emf.getProperties().get("objectdb.connection.path").toString();
+		newPath = newPath.substring(0, newPath.lastIndexOf('.'));
+		//newPath += "_" + context.getCurrentState().getName();
+		// find the next number
+		
+		String location = newPath + filename + ".odb";
+		Path source = Paths.get((String)emf.getProperties().get("objectdb.connection.path"));
+		Path destination = Paths.get(location);
+		try {
+			emf.close();
+			Files.copy(source, destination);
+			emf = Persistence.createEntityManagerFactory(location);
+			em = emf.createEntityManager();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	@Override 
 	public void cleanFiles() {
 		String fileString = (String) emf.getProperties().get("objectdb.connection.path");
 		Path filePath = Paths.get(fileString);

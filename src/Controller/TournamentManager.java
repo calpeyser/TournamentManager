@@ -2,18 +2,10 @@ package Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.nio.file.*;
 
-import javax.persistence.Query;
 import javax.swing.JOptionPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-import java.util.*;
 
-import Base.*;
 import Check.Check;
 import Check.CheckFailedException;
 import Ruleset.*;
@@ -27,12 +19,11 @@ public class TournamentManager {
 	public ContextFrame frame;
 	private Ruleset ruleset;
 	private TournamentDataStore db;
-	private PopupDialog popup;
 		
 	private ActionListener stateChanger() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				Event eventOccured = frame.eventList.getSelectedValue();
+				Event eventOccured = frame.selectedEvent;
 				if (eventOccured == null) {
 					return;
 				}
@@ -49,10 +40,10 @@ public class TournamentManager {
 						c.performCheck();
 					}
 					catch (CheckFailedException e) {
-						popup = new PopupDialog(frame, e.getMessage());
-						popup.addListenerToClose(closePopup());
-						popup.setVisible(true);	
-						return;
+						int reply2 = JOptionPane.showConfirmDialog(frame, "WARNING: " + e.getMessage() +".  Proceeding may cause ruleset failure.  Proceed anyway?", "STATE WARNING", JOptionPane.YES_NO_OPTION);
+						if (reply2 != JOptionPane.YES_OPTION) {
+							return;
+						}
 					}
 				}
 				
@@ -72,7 +63,7 @@ public class TournamentManager {
 					action.execute();
 				}
 								
-				// save the database
+				// auto-save the database
 				db.save();
 				
 				// alter frame
@@ -84,13 +75,22 @@ public class TournamentManager {
 	private ActionListener dynamicAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				UIDataAction actionToPerform = frame.actionList.getSelectedValue();
+				UIDataAction actionToPerform = frame.selectedAction;
 				if (actionToPerform == null) {
 					return;
 				}
 				// open the dialogue 
 				actionToPerform.bind(db);
 				actionToPerform.attachToFrame(frame);
+			}
+		};
+	}
+	
+	private ActionListener saveListener() {
+		return new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				String savename = JOptionPane.showInputDialog("Please provide a name for this tournament snapshot");
+				db.save(savename);
 			}
 		};
 	}
@@ -113,15 +113,9 @@ public class TournamentManager {
 		/* Transitioning to a new state */
 		frame.addListenerToEvent(stateChanger());
 		frame.addDynamicActions(dynamicAction());
-	}
-	
-	private ActionListener closePopup() {
-		return new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				popup.setVisible(false);
-				popup.dispose();
-			}
-		};
+		
+		// save
+		frame.addListenerToSave(saveListener());
 	}
 	
 	public static void createNewTourament(TournamentFactory factory, String path) {

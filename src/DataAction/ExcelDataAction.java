@@ -47,22 +47,11 @@ public abstract class ExcelDataAction extends UIDataAction {
 			catch (Exception e) {
 				String errorMessage = "File cound not be opened as an Excel Spreadsheet.  Error: ";
 				errorMessage += e.getLocalizedMessage();
-				popup = new PopupDialog(frame, errorMessage);
-				popup.addListenerToClose(closePopup());
-				popup.setVisible(true);	
+				JOptionPane.showMessageDialog(frame, errorMessage);
 			}
 		}
 	}
-	
-	private ActionListener closePopup() {
-		return new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				popup.setVisible(false);
-				popup.dispose();
-			}
-		};
-	}
-	
+
 	protected abstract void performConfiguration();
 
 }
