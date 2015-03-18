@@ -45,13 +45,12 @@ public class Team extends Record implements Comparable<Team> {
 		if (this.score > that.score) {return -1;}
 		else if (this.score < that.score) {return 1;}
 		else {
-			// if this is round 1, prioritize point differential
-			if (this.opponents.size() == 1) {
-				if (this.PointDifferential > that.PointDifferential) {return -1;}
-				else if (this.PointDifferential < that.PointDifferential) {return 1;}
-			}
+
 			if (this.CombinedStrength > that.CombinedStrength) {return -1;}
 			else if (this.CombinedStrength < that.CombinedStrength) {return 1;}
+			else if (this.PointDifferential > that.PointDifferential) {return -1;}
+			else if (this.PointDifferential < that.PointDifferential) {return 1;}
+
 			else {return 0;}
 		}
 	}

@@ -6,6 +6,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 
+
+
+
 import Check.Check;
 import Check.CheckFailedException;
 import Ruleset.*;
@@ -50,7 +53,12 @@ public class TournamentManager {
 				// execute exiting actions
 				for (AutomaticDataAction action : db.getContext().getCurrentState().getExitConfig()) {
 					action.bind(db);
-					action.execute();
+					try {
+						action.execute();
+					} catch (DataActionException e) {
+						JOptionPane.showMessageDialog(frame, e.getMessage());
+						return;
+					}
 				}
 				
 				// find new state
@@ -60,7 +68,12 @@ public class TournamentManager {
 				// execute entry actions
 				for (AutomaticDataAction action : newState.getEntryConfig()) {
 					action.bind(db);
-					action.execute();
+					try {
+						action.execute();
+					} catch (DataActionException e) {
+						e.printStackTrace();
+						return;
+					}
 				}
 								
 				// auto-save the database
@@ -101,7 +114,11 @@ public class TournamentManager {
 		
 		for (AutomaticDataAction action : ruleset.getStartState().getEntryConfig()) {
 			action.bind(db);
-			action.execute();
+			try {
+				action.execute();
+			} catch (DataActionException e) {
+				JOptionPane.showMessageDialog(frame, e.getMessage());
+			}
 		}
 		
 		for (Visible v : ruleset.getVisibles()) {

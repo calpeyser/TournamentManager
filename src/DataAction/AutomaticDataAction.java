@@ -10,6 +10,6 @@ import Data.TournamentDataStore;
  */
 public abstract class AutomaticDataAction extends DataAction {
 
-	public abstract void execute();
+	public abstract void execute() throws DataActionException;
 	
 }

@@ -96,8 +96,8 @@ public class Round3Pairings extends AutomaticDataAction {
 				Teams1.get(rank).wentP = false;
 				Teams2.get(rank).wentP = true;
 			}
-			Teams1.get(rank).opponents.add(Teams1.get(rank));
 			Teams1.get(rank).opponents.add(Teams2.get(rank));
+			Teams2.get(rank).opponents.add(Teams1.get(rank));
 
 			db.getEntityManager().getTransaction().begin();
 			db.getEntityManager().persist(m);
