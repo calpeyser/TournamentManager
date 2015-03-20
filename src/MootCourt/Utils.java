@@ -1,6 +1,6 @@
 package MootCourt;
 
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,5 +23,37 @@ public class Utils {
 		Root<Team> r = cq.from(Team.class);
 		cq.select(r);
 		return db.getEntityManager().createQuery(cq).getResultList();
+	}
+
+	public static List<Player> getAllPlayers(TournamentDataStore db) {
+		CriteriaBuilder cb = db.getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Player> cq = cb.createQuery(Player.class);
+		Root<Player> r = cq.from(Player.class);
+		cq.select(r);
+		return db.getEntityManager().createQuery(cq).getResultList();
+	}
+	
+	public static List<Judge> getAllJudges(TournamentDataStore db) {
+		CriteriaBuilder cb = db.getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Judge> cq = cb.createQuery(Judge.class);
+		Root<Judge> r = cq.from(Judge.class);
+		cq.select(r);
+		return db.getEntityManager().createQuery(cq).getResultList();
+	}
+	
+	public static List<Judge> getAllJudgesInPlay(TournamentDataStore db) {
+		List<Judge> out = new ArrayList<Judge>();
+		for (Match m : getAllMatches(db)) {
+			for (Judge b : m.ballots) {
+				out.add(b);
+			}
+		}
+		return out;
+	}
+	
+	public static void customAssert(boolean test, String message) {
+		if (!test) {
+			throw new RuntimeException("CUSTOM ASSERTION ERROR: " + message);
+		}
 	}
 }

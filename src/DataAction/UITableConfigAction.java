@@ -18,15 +18,14 @@ public abstract class UITableConfigAction extends UIDataAction {
 	protected TableDialog dialog;
 	protected DBTableModel data;
 	
-	protected OptionsModel getOptionsModel() {
-		return new DefaultOptionsModel(getRecordType(), db);
-	}
+	protected abstract OptionsModel getOptionsModel();
+	
+	protected abstract DBTableModel getData();
 	
 	@Override
 	public void attachToFrame(Window frame) {
 		super.attachToFrame(frame);
-		data = new DBTableModel(db, getRecordType());
-		
+		data = getData();		
 		dialog = new TableDialog(frame, data);
 		dialog.addListenerToExit(exitButton());
 		dialog.addListenerToDelete(deleteButton());

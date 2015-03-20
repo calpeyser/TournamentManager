@@ -1,9 +1,11 @@
 package MootCourt;
 
 import Base.Record;
-import DataAction.UITableConfigAction;
+import DataAction.OptionsModel;
+import DataAction.DefaultUITableConfigAction;
+import DataAction.DefaultUITableEditOnlyAction;
 
-public class AssignJudges extends UITableConfigAction {
+public class AssignJudges extends DefaultUITableEditOnlyAction {
 
 	@Override
 	protected Class<? extends Record> getRecordType() {
@@ -13,6 +15,11 @@ public class AssignJudges extends UITableConfigAction {
 	@Override
 	public String description() {
 		return "Assign Judges to Rounds";
+	}
+	
+	@Override
+	protected OptionsModel getOptionsModel() {
+		return new JudgeAssignmentOptionsModel(Match.class, db);
 	}
 
 }

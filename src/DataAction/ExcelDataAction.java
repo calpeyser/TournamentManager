@@ -45,6 +45,7 @@ public abstract class ExcelDataAction extends UIDataAction {
 				performConfiguration();
 			}
 			catch (Exception e) {
+				db.getEntityManager().getTransaction().commit(); // just in case transaction is active
 				String errorMessage = "File cound not be opened as an Excel Spreadsheet.  Error: ";
 				errorMessage += e.getLocalizedMessage();
 				JOptionPane.showMessageDialog(frame, errorMessage);

@@ -65,15 +65,25 @@ public class RecordDialogue extends JDialog {
 		for (JComponent comp : compToAttrib.keySet()) {
 			Field f = nameToField.get(compToAttrib.get(comp));
 			String tabName;
+			String label = "";
 			if (f.isAnnotationPresent(FormFormat.class)) {
 				FormFormat format = f.getAnnotation(FormFormat.class);
 				tabName = format.tab();
+				if (format.immutable()) {
+					comp.setEnabled(false);
+				}
+				label = format.name();
 			}
 			else {
 				tabName = DEFAULT_TAB_NAME;
 			}
 			
-			namesToTabs.get(tabName).add(new JLabel(compToAttrib.get(comp)));
+			if (label.equals("")) {
+				namesToTabs.get(tabName).add(new JLabel(compToAttrib.get(comp)));
+			}
+			else {
+				namesToTabs.get(tabName).add(new JLabel(label));
+			}
 			namesToTabs.get(tabName).add(comp);
 		}
 		

@@ -129,7 +129,7 @@ public class ContextFrame extends JFrame {
 		JLabel instructionsLabel = new JLabel("Continue the tournament by choosing an event from this panel.", SwingConstants.CENTER);
 		instructionsLabel.setFont(new Font("Dialog", Font.PLAIN, 14));
 		instructionsPanel.add(instructionsLabel, BorderLayout.WEST);
-		saveButton = new JButton("Save");
+		saveButton = new JButton("Use New Save");
 		instructionsPanel.add(saveButton, BorderLayout.EAST);
 		stateTab.add(instructionsPanel, BorderLayout.PAGE_END);
 		

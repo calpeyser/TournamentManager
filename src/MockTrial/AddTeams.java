@@ -1,9 +1,9 @@
 package MockTrial;
 
 import Base.Record;
-import DataAction.UITableConfigAction;
+import DataAction.DefaultUITableConfigAction;
 
-public class AddTeams extends UITableConfigAction {
+public class AddTeams extends DefaultUITableConfigAction {
 
 	@Override
 	protected Class<? extends Record> getRecordType() {

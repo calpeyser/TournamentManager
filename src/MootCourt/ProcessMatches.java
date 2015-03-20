@@ -10,23 +10,36 @@ public class ProcessMatches extends AutomaticDataAction {
 	public void execute() throws DataActionException {
 		List<Match> matches = Utils.getAllMatches(db);
 		for (Match m : matches) {
-			int PScore = m.P1Argument + m.P1Presentation + m.P2Argument + m.P2Presentation + m.PProfessionalism;
-			int RScore = m.R1Argument + m.R1Presentation + m.R2Argument + m.R2Presentation + m.RProfessionalism;
-			
-			if (PScore == RScore) {
-				throw new DataActionException("Ties are not allowed");
+			// process the individual match
+			int pointDifferential = 0;
+			int PBallots = 0;
+			int RBallots = 0;
+			for (Judge b : m.ballots) {
+				int PScore = b.P1Argument + b.P1Presentation + b.P2Argument + b.P2Presentation + b.PTeamwork;
+				int RScore = b.R1Argument + b.R1Presentation + b.R2Argument + b.R2Presentation + b.RTeamwork;		
+				Utils.customAssert(PScore != RScore, "Tie in match " + m + " ballot " + b);
+				pointDifferential += (PScore - RScore);
+				if (PScore > RScore) {
+					PBallots += 1;
+				}
+				else {
+					RBallots += 1;
+				}
 			}
+
+			Utils.customAssert(PBallots != RBallots, "Tie in ballot numbers");
 			
-			int pointDifference = (PScore - RScore);
 			db.getEntityManager().getTransaction().begin();
-			if (pointDifference > 0) {
+			if (PBallots > RBallots) {
 				m.PTeam.score++;
 			}
 			else {
 				m.RTeam.score++;
 			}
-			m.PTeam.pointDifferential += pointDifference;
-			m.RTeam.pointDifferential -= pointDifference;
+			m.PTeam.pointDifferential += pointDifferential;
+			m.RTeam.pointDifferential -= pointDifferential;
+			m.PTeam.hitTeams.add(m.RTeam);
+			m.RTeam.hitTeams.add(m.PTeam);
 			db.getEntityManager().getTransaction().commit();
 			
 		}

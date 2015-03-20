@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import DataAction.ExcelDataAction;
 
 
-public class ExcelConfig extends ExcelDataAction {
+public class ExcelParticipantsConfig extends ExcelDataAction {
 
 	@Override
 	protected void performConfiguration() {
@@ -29,8 +29,10 @@ public class ExcelConfig extends ExcelDataAction {
 				team.designation = r.getCell(0).getStringCellValue();
 			}
 			team.schoolName = r.getCell(1).getStringCellValue();
-			team.player1Name = r.getCell(2).getStringCellValue();
-			team.player2Name = r.getCell(3).getStringCellValue();
+			team.player1 = new Player(r.getCell(2).getStringCellValue());
+			team.player2 = new Player(r.getCell(3).getStringCellValue());
+			db.getEntityManager().persist(team.player1);
+			db.getEntityManager().persist(team.player2);
 			db.getEntityManager().persist(team);
 			db.getEntityManager().getTransaction().commit();
 		}

@@ -42,10 +42,12 @@ public class DBTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		CriteriaBuilder cb = db.getEntityManager().getCriteriaBuilder();
+		return data.size();
+		
+		/*CriteriaBuilder cb = db.getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		cq.select(cb.count(cq.from(recordType)));
-		return db.getEntityManager().createQuery(cq).getSingleResult().intValue();
+		return db.getEntityManager().createQuery(cq).getSingleResult().intValue(); */
 	}
 
 	@Override

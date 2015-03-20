@@ -1,9 +1,9 @@
 package MockTrial;
 
 import Base.Record;
-import DataAction.UITableEditOnlyAction;
+import DataAction.DefaultUITableEditOnlyAction;
 
-public class EditTeams extends UITableEditOnlyAction {
+public class EditTeams extends DefaultUITableEditOnlyAction {
 
 	@Override
 	protected Class<? extends Record> getRecordType() {

@@ -2,15 +2,20 @@ package MootCourt;
 
 import javax.persistence.*;
 
+import java.util.*;
+
 import Base.*;
 
+@Entity
 public class Team extends Record implements Comparable<Team> {
 	@Basic @MustBeSet public String schoolName;
 	@Basic @MustBeSet public String designation;
 	
-	@Basic @MustBeSet public String player1Name;
-	@Basic @MustBeSet public String player2Name;
+	@OneToOne @MustBeSet public Player player1;
+	@OneToOne @MustBeSet public Player player2;
 	
+	@OneToMany (targetEntity = Team.class) public List<Team> hitTeams;
+
 	@Basic public int score;
 	@Basic public int pointDifferential;
 	
@@ -19,15 +24,17 @@ public class Team extends Record implements Comparable<Team> {
 	public Team() {
 		this.schoolName = null;
 		this.designation = null;
-		this.player1Name = null;
-		this.player2Name = null;
+		this.player1 = null;
+		this.player2 = null;
+		this.hitTeams = new ArrayList<Team>();
 	}
 		
-	public Team(String schoolName, String designation, String player1Name, String player2Name) {
+	public Team(String schoolName, String designation, Player player1, Player player2) {
 		this.schoolName = schoolName;
 		this.designation = designation;
-		this.player1Name = player1Name;
-		this.player2Name = player2Name;
+		this.player1 = player1;
+		this.player2 = player2;
+		this.hitTeams = new ArrayList<Team>();
 	}
 	
 	@Override

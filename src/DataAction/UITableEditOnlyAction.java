@@ -9,7 +9,7 @@ public abstract class UITableEditOnlyAction extends UITableConfigAction {
 
 	@Override
 	public void attachToFrame(Window frame) {
-		data = new DBTableModel(db, getRecordType());
+		data = getData();
 		dialog = new TableDialog(frame, data);
 		dialog.addListenerToExit(exitButton());
 		dialog.addListenerToEdit(editButton());
@@ -17,4 +17,5 @@ public abstract class UITableEditOnlyAction extends UITableConfigAction {
 		dialog.disableDelete();
 		dialog.setVisible(true);		
 	}
+
 }

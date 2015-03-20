@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 
 public @interface FormFormat {
-	String tab();
-	boolean canBeChanged() default true;
+	String tab() default "Default Tab";
+	String name() default "";
+	boolean immutable() default false;
 }

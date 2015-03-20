@@ -14,39 +14,53 @@ public class MootCourtTournamentFactory extends DefaultTournamentFactory {
 	public Ruleset makeRuleset() {
 		List<UIDataAction> configActions = new ArrayList<UIDataAction>();
 		List<UIDataAction> roundActions = new ArrayList<UIDataAction>();
-		List<AutomaticDataAction> processMatches = new ArrayList<AutomaticDataAction>();
 		List<UIDataAction> assignJudgesActions = new ArrayList<UIDataAction>();
-		configActions.add(new ExcelConfig());
-		roundActions.add(new EditMatches());
+		List<AutomaticDataAction> randomPairing = new ArrayList<AutomaticDataAction>();
+		List<AutomaticDataAction> powerMatching = new ArrayList<AutomaticDataAction>();
+		List<AutomaticDataAction> processMatches = new ArrayList<AutomaticDataAction>();
+		List<AutomaticDataAction> processJudgeAssignments = new ArrayList<AutomaticDataAction>();
+		
+		configActions.add(new ExcelParticipantsConfig());
+		configActions.add(new ExcelJudgesConfig());
+		configActions.add(new ManualTeamsConfig());
+		configActions.add(new ManualJudgesConfig());
+		roundActions.add(new EnterBallotResults());
+		roundActions.add(new RandomizeBallotResults());
 		processMatches.add(new ProcessMatches());
+		processMatches.add(new ClearMatches());
 		assignJudgesActions.add(new AssignJudges());
+		assignJudgesActions.add(new RandomizeJudgeAssignments());
+		randomPairing.add(new RandomPairing());
+		powerMatching.add(new PowerMatching());
+		processJudgeAssignments.add(new ProcessJudgeAssignments());
 		
 		
-		List<Check> exitChecks = new ArrayList<Check>();
+		List<Check> roundExitChecks = new ArrayList<Check>();
+		roundExitChecks.add(new RoundExitChecks());
 		
 		List<State> states = new ArrayList<State>();
 		State configure = new State("Configuration", null, configActions, null, null);
-		State round1 = new State("Round 1", null, roundActions, processMatches, exitChecks);
-		State round2 = new State("Round 2", null, roundActions, processMatches, exitChecks);
-		State round3 = new State("Round 3", null, roundActions, processMatches, exitChecks);
-		State round4 = new State("Round 4", null, roundActions, processMatches, exitChecks);
-		State elim32 = new State("Elimination : Round of 32", null, roundActions, processMatches, exitChecks);
-		State elim16 = new State("Elimination : Sweet Sixteen", null, roundActions, processMatches, exitChecks);
-		State elim8 = new State("Elimination : Quarterfinals", null, roundActions, processMatches, exitChecks);
-		State elim4 = new State("Elimination : Semifinals", null, roundActions, processMatches, exitChecks);
-		State elim2 = new State("Elimination : Finals", null, roundActions, processMatches, exitChecks);
+		State round1 = new State("Round 1", null, roundActions, processMatches, roundExitChecks);
+		State round2 = new State("Round 2", null, roundActions, processMatches, roundExitChecks);
+		State round3 = new State("Round 3", null, roundActions, processMatches, roundExitChecks);
+		State round4 = new State("Round 4", null, roundActions, processMatches, roundExitChecks);
+		State elim32 = new State("Elimination : Round of 32", null, roundActions, processMatches, roundExitChecks);
+		State elim16 = new State("Elimination : Sweet Sixteen", null, roundActions, processMatches, roundExitChecks);
+		State elim8 = new State("Elimination : Quarterfinals", null, roundActions, processMatches, roundExitChecks);
+		State elim4 = new State("Elimination : Semifinals", null, roundActions, processMatches, roundExitChecks);
+		State elim2 = new State("Elimination : Finals", null, roundActions, processMatches, roundExitChecks);
 		State end = new State("Tournament Finished", null, null, null, null);
 		
 		// judge assignment
-		State assignJudges1 = new State("Assign Judges", null, assignJudgesActions, null, null);
-		State assignJudges2 = new State("Assign Judges", null, assignJudgesActions, null, null);
-		State assignJudges3 = new State("Assign Judges", null, assignJudgesActions, null, null);
-		State assignJudges4 = new State("Assign Judges", null, assignJudgesActions, null, null);
-		State assignJudgesElim32 = new State("Assign Judges", null, assignJudgesActions, null, null);
-		State assignJudgesElim16 = new State("Assign Judges", null, assignJudgesActions, null, null);
-		State assignJudgesElim8 = new State("Assign Judges", null, assignJudgesActions, null, null);
-		State assignJudgesElim4 = new State("Assign Judges", null, assignJudgesActions, null, null);
-		State assignJudgesElim2 = new State("Assign Judges", null, assignJudgesActions, null, null);
+		State assignJudges1 = new State("Assign Judges", randomPairing, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudges2 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudges3 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudges4 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudgesElim32 = new State("Assign Judges", null, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudgesElim16 = new State("Assign Judges", null, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudgesElim8 = new State("Assign Judges", null, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudgesElim4 = new State("Assign Judges", null, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudgesElim2 = new State("Assign Judges", null, assignJudgesActions, processJudgeAssignments, null);
 
 		states.add(configure); states.add(round1); states.add(round2); states.add(round3); states.add(round4);
 		states.add(elim32); states.add(elim16); states.add(elim8); states.add(elim4); states.add(elim2); states.add(end);
@@ -121,9 +135,12 @@ public class MootCourtTournamentFactory extends DefaultTournamentFactory {
 		TransitionFunction tfunction = new TransitionFunction(events, transition);
 
 		List<Class<? extends Record>> configClasses = new ArrayList<Class<? extends Record>>();
-		configClasses.add(Match.class); configClasses.add(Ballot.class);
+		configClasses.add(Match.class); configClasses.add(Judge.class);
 		
 		List<Visible> visibles = new ArrayList<Visible>();
+		visibles.add(new CurrentMatches());
+		visibles.add(new TeamRankings());
+		visibles.add(new PlayerRankings());
 		
 		return new Ruleset("Moot Court", states, configure, events, tfunction, configClasses, visibles);
 		

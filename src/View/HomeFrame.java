@@ -61,7 +61,7 @@ public class HomeFrame extends JFrame {
 		continueTournamentButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		buttonsPane.add(continueTournamentButton);
 		
-		JLabel title = new JLabel("Touranment Management for " + tournamentName, SwingConstants.CENTER);
+		JLabel title = new JLabel("Tournament Management for " + tournamentName, SwingConstants.CENTER);
 		title.setFont(new Font("Dialog", Font.PLAIN, 20));
 		contentPane.add(title, BorderLayout.NORTH);
 

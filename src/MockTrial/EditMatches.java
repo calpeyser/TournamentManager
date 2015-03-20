@@ -2,9 +2,9 @@ package MockTrial;
 
 import Base.Record;
 import DataAction.OptionsModel;
-import DataAction.UITableEditOnlyAction;
+import DataAction.DefaultUITableEditOnlyAction;
 
-public class EditMatches extends UITableEditOnlyAction {
+public class EditMatches extends DefaultUITableEditOnlyAction {
 
 	@Override
 	protected Class<? extends Record> getRecordType() {

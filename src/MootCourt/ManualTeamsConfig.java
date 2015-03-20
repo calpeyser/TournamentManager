@@ -1,18 +1,18 @@
-package MockTrial;
+package MootCourt;
 
 import Base.Record;
 import DataAction.DefaultUITableConfigAction;
 
-public class AddPlayers extends DefaultUITableConfigAction {
+public class ManualTeamsConfig extends DefaultUITableConfigAction {
 
 	@Override
 	protected Class<? extends Record> getRecordType() {
-		return Player.class;
+		return Team.class;
 	}
 
 	@Override
 	public String description() {
-		return "Add Players to the Tournament";
+		return "Configure Teams Manually";
 	}
-	
+
 }
