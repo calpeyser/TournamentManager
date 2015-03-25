@@ -29,7 +29,10 @@ public class Judge extends Record {
 	@OneToOne @FormFormat(tab = "Rankings", name = "Rank : 2") public Player rank2;
 	@OneToOne @FormFormat(tab = "Rankings", name = "Rank : 1 (worst)") public Player rank1;
 	
-	public Judge() {};
+	public Judge() {
+		currentMatch = null;
+		rank4 = null; rank3 = null; rank2 = null; rank1 = null;
+	}
 	
 	@Override
 	public String toString() {

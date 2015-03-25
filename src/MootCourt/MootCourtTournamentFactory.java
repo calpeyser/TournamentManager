@@ -26,7 +26,7 @@ public class MootCourtTournamentFactory extends DefaultTournamentFactory {
 		configActions.add(new ManualJudgesConfig());
 		roundActions.add(new EnterBallotResults());
 		roundActions.add(new RandomizeBallotResults());
-		processMatches.add(new ProcessMatches());
+		processMatches.add(new ProcessMatchesNonElimination());
 		processMatches.add(new ClearMatches());
 		assignJudgesActions.add(new AssignJudges());
 		assignJudgesActions.add(new RandomizeJudgeAssignments());
@@ -37,6 +37,9 @@ public class MootCourtTournamentFactory extends DefaultTournamentFactory {
 		
 		List<Check> roundExitChecks = new ArrayList<Check>();
 		roundExitChecks.add(new RoundExitChecks());
+		
+		List<Check> nonElimAssignmentChecks = new ArrayList<Check>();
+		nonElimAssignmentChecks.add(new AssignmentNonElimCheck());
 		
 		List<State> states = new ArrayList<State>();
 		State configure = new State("Configuration", null, configActions, null, null);
@@ -52,10 +55,10 @@ public class MootCourtTournamentFactory extends DefaultTournamentFactory {
 		State end = new State("Tournament Finished", null, null, null, null);
 		
 		// judge assignment
-		State assignJudges1 = new State("Assign Judges", randomPairing, assignJudgesActions, processJudgeAssignments, null);
-		State assignJudges2 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, null);
-		State assignJudges3 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, null);
-		State assignJudges4 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, null);
+		State assignJudges1 = new State("Assign Judges", randomPairing, assignJudgesActions, processJudgeAssignments, nonElimAssignmentChecks);
+		State assignJudges2 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, nonElimAssignmentChecks);
+		State assignJudges3 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, nonElimAssignmentChecks);
+		State assignJudges4 = new State("Assign Judges", powerMatching, assignJudgesActions, processJudgeAssignments, nonElimAssignmentChecks);
 		State assignJudgesElim32 = new State("Assign Judges", null, assignJudgesActions, processJudgeAssignments, null);
 		State assignJudgesElim16 = new State("Assign Judges", null, assignJudgesActions, processJudgeAssignments, null);
 		State assignJudgesElim8 = new State("Assign Judges", null, assignJudgesActions, processJudgeAssignments, null);

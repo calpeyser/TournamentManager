@@ -2,8 +2,12 @@ package Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JOptionPane;
+
+
 
 
 
@@ -133,6 +137,14 @@ public class TournamentManager {
 		
 		// save
 		frame.addListenerToSave(saveListener());
+		
+		// exit
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				db.cleanFiles();
+			}
+		});
 	}
 	
 	public static void createNewTourament(TournamentFactory factory, String path) {
@@ -145,7 +157,8 @@ public class TournamentManager {
 	
 	public static void recoverTournament(TournamentFactory factory, String path) {
 		Ruleset ruleset = factory.makeRuleset();
-		TournamentDataStore db = factory.recoverDB(ruleset, path); 
+		TournamentDataStore db = factory.recoverDB(ruleset, path);
+		db.pivot();
 		TournamentManager tm = new TournamentManager(ruleset, db);
 		tm.frame.setVisible(true);	
 	}	

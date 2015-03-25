@@ -29,7 +29,7 @@ public class TeamRankings extends TableVisible {
 			Team t = allTeams.get(teamIndex);
 			out[teamIndex][0] = t.schoolName;
 			out[teamIndex][1] = t.designation;
-			out[teamIndex][2] = t.score;
+			out[teamIndex][2] = t.ballots;
 			out[teamIndex][3] = t.pointDifferential;
 			out[teamIndex][4] = t.hitTeams;
 			out[teamIndex][5] = t.player1;

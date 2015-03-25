@@ -27,11 +27,13 @@ public class ObjectDBDataStore implements TournamentDataStore {
 	private EntityManagerFactory emf;
 	private EntityManager em;
 	private TournamentContext context;
-	
-	private String location;
+		
+	private String activeLocation() {
+		String p = emf.getProperties().get("objectdb.connection.path").toString();
+		return p;
+	}
 	
 	public ObjectDBDataStore(String location) {
-		this.location = location;
 		emf = Persistence.createEntityManagerFactory(location);
 		em = emf.createEntityManager();
 	}
@@ -58,9 +60,8 @@ public class ObjectDBDataStore implements TournamentDataStore {
 		em.persist(context.getCurrentState());
 		em.getTransaction().commit();
 		
-		String newPath = emf.getProperties().get("objectdb.connection.path").toString();
+		String newPath = activeLocation();
 		newPath = newPath.substring(0, newPath.lastIndexOf('.'));
-		//newPath += "_" + context.getCurrentState().getName();
 		// find the next number
 		int i = 1;
 		while(true) {
@@ -71,12 +72,12 @@ public class ObjectDBDataStore implements TournamentDataStore {
 				continue;
 			}
 			else {
-				Path source = Paths.get((String)emf.getProperties().get("objectdb.connection.path"));
+				Path source = Paths.get(activeLocation());
 				Path destination = Paths.get(canditateLocation);
 				try {
 					emf.close();
 					Files.copy(source, destination);
-					emf = Persistence.createEntityManagerFactory(location);
+					emf = Persistence.createEntityManagerFactory(activeLocation());
 					em = emf.createEntityManager();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -103,34 +104,64 @@ public class ObjectDBDataStore implements TournamentDataStore {
 		em.persist(context.getCurrentState());
 		em.getTransaction().commit();
 		
-		String newPath = emf.getProperties().get("objectdb.connection.path").toString();
-		newPath = newPath.substring(0, newPath.lastIndexOf('.'));
-		//newPath += "_" + context.getCurrentState().getName();
 		// find the next number
 		
-		String location = newPath + filename + ".odb";
-		Path source = Paths.get((String)emf.getProperties().get("objectdb.connection.path"));
-		Path destination = Paths.get(location);
+		String newlocation = activeLocation() + filename + ".odb";
+		Path source = Paths.get(activeLocation());
+		Path destination = Paths.get(newlocation);
 		try {
 			emf.close();
 			Files.copy(source, destination);
-			emf = Persistence.createEntityManagerFactory(location);
+			emf = Persistence.createEntityManagerFactory(activeLocation());
 			em = emf.createEntityManager();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
 	}
 	
+	// Save the current database, and use a copy called "Database.odb"
+	@Override 
+	public void pivot() {
+		// tell the database that we are in a new state
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<State> cq = cb.createQuery(State.class);
+		Root<State> r = cq.from(State.class);
+		cq.select(r);
+		TypedQuery<State> q = em.createQuery(cq);
+				
+		List<State> oldStates = q.getResultList();
+		em.getTransaction().begin();
+		for (State s : oldStates) {
+			em.remove(s);
+		}
+		em.persist(context.getCurrentState());
+		em.getTransaction().commit();
+		
+		String newPath = activeLocation();
+		newPath = newPath.substring(0, newPath.lastIndexOf('\\'));
+		
+		String newLocation =  newPath + "\\Database.odb";
+		Path source = Paths.get(activeLocation());
+		Path destination = Paths.get(newLocation);
+		try {
+			emf.close();
+			Files.copy(source, destination);
+			emf = Persistence.createEntityManagerFactory(newLocation);
+			em = emf.createEntityManager();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		
+	}
+	
 	@Override 
 	public void cleanFiles() {
+		emf.close();
 		String fileString = (String) emf.getProperties().get("objectdb.connection.path");
+		System.out.println(fileString);
 		Path filePath = Paths.get(fileString);
 		try {
-			for (Path p : Files.newDirectoryStream(filePath.getParent())) {
-				if ((!p.toString().equals(fileString)) && (!p.toString().equals((fileString + "$")))) {
-					Files.delete(p);
-				}
-			}
+			Files.delete(filePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
@@ -150,40 +181,4 @@ public class ObjectDBDataStore implements TournamentDataStore {
 	public void setContext(TournamentContext context) {
 		this.context = context;
 	}
-
-	/*
-	public void add(Record e) {
-		em.getTransaction().begin();
-		em.persist(e);
-		em.getTransaction().commit();
-	}
-	
-	public void delete(Record e) {
-		em.getTransaction().begin();
-		em.remove(e);
-		em.getTransaction().commit();
-	}
-
-	
-	public <T> List<T> getAll(Class<T> type) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<T> q = cb.createQuery(type);
-		Root<T> c = q.from(type);
-		q.select(c);
-		TypedQuery<T> query = em.createQuery(q);
-		return query.getResultList();
-	}
-	
-	public static void main(String[] args) {
-		TournamentDataStore db = new ObjectDBDataStore("$objectdb/db/test1.odb");
-		List<MockPlayer> players = db.getAll(MockPlayer.class);
-		for (MockPlayer p : players) {
-			System.out.println(p);
-		}
-		
-	}
-
-	}
-	*/
-
 }

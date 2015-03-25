@@ -15,5 +15,4 @@ public class ProcessJudgeAssignments extends AutomaticDataAction {
 		}
 		db.getEntityManager().getTransaction().commit();
 	}
-
 }

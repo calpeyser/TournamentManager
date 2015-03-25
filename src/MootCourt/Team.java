@@ -16,7 +16,7 @@ public class Team extends Record implements Comparable<Team> {
 	
 	@OneToMany (targetEntity = Team.class) public List<Team> hitTeams;
 
-	@Basic public int score;
+	@Basic public int ballots;
 	@Basic public int pointDifferential;
 	
 	@Basic boolean wentP;
@@ -44,8 +44,8 @@ public class Team extends Record implements Comparable<Team> {
 
 	@Override
 	public int compareTo(Team that) {
-		if (this.score > that.score) {return -1;}
-		if (this.score < that.score) {return 1;}
+		if (this.ballots > that.ballots) {return -1;}
+		if (this.ballots < that.ballots) {return 1;}
 		if (this.pointDifferential > that.pointDifferential) {return -1;}
 		if (this.pointDifferential < that.pointDifferential) {return 1;}
 		return 0;
