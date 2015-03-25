@@ -107,7 +107,7 @@ public class TournamentManager {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				String savename = JOptionPane.showInputDialog("Please provide a name for this tournament snapshot");
-				db.save(savename);
+				db.save(savename, frame);
 			}
 		};
 	}

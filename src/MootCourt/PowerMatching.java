@@ -10,15 +10,15 @@ public class PowerMatching extends MootCourtPairingScheme {
 		Collections.sort(teams);
 		
 		for (int i = 0; i < teams.size(); i += 2) {
-			PTeams.add(teams.get(i));
-			RTeams.add(teams.get(i+1));
+			Teams1.add(teams.get(i));
+			Teams2.add(teams.get(i+1));
 		}
 		
 		resolveMatches();
 		
 		List<Match> out = new ArrayList<Match>();
-		for (int i = 0; i < PTeams.size(); i++) {
-			out.add(new Match(PTeams.get(i), RTeams.get(i)));
+		for (int i = 0; i < Teams1.size(); i++) {
+			out.add(new Match(Teams1.get(i), Teams2.get(i)));
 		}
 		return out;
 	}

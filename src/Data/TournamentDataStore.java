@@ -2,6 +2,7 @@ package Data;
 
 import Base.*;
 
+import java.awt.Window;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -18,7 +19,7 @@ public interface TournamentDataStore {
 	
 	public void save();
 	
-	public void save(String filename);
+	public void save(String filename, Window callingWindow);
 	
 	public void pivot();
 	

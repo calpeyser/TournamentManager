@@ -1,6 +1,7 @@
 package Data;
 
 
+import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.swing.JOptionPane;
 
 import Ruleset.State;
 
@@ -31,6 +33,12 @@ public class ObjectDBDataStore implements TournamentDataStore {
 	private String activeLocation() {
 		String p = emf.getProperties().get("objectdb.connection.path").toString();
 		return p;
+	}
+	
+	private String activeLocationWithoutSuffix() {
+		String p = activeLocation();
+		return p.substring(0, p.lastIndexOf('.'));
+
 	}
 	
 	public ObjectDBDataStore(String location) {
@@ -88,7 +96,14 @@ public class ObjectDBDataStore implements TournamentDataStore {
 	}
 	
 	@Override 
-	public void save(String filename) {
+	public void save(String filename, Window callingWindow) {
+				
+		// make sure this isn't a duplicate name
+		if (new File(activeLocationWithoutSuffix() + filename + ".odb").exists()) {
+			JOptionPane.showMessageDialog(callingWindow, "Save corresponding to the name " + filename + " already exists, please choose another.");
+			return;
+		}
+		
 		// tell the database that we are in a new state
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<State> cq = cb.createQuery(State.class);
@@ -106,9 +121,10 @@ public class ObjectDBDataStore implements TournamentDataStore {
 		
 		// find the next number
 		
-		String newlocation = activeLocation() + filename + ".odb";
+		String newlocation = activeLocationWithoutSuffix() + filename + ".odb";
 		Path source = Paths.get(activeLocation());
 		Path destination = Paths.get(newlocation);
+
 		try {
 			emf.close();
 			Files.copy(source, destination);

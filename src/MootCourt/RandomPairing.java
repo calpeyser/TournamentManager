@@ -9,17 +9,17 @@ public class RandomPairing extends MootCourtPairingScheme {
 		List<Team> teams = Utils.getAllTeams(db);
 		
 		while(true) {
-			Collections.shuffle(teams, new Random()); PTeams.clear(); RTeams.clear();
+			Collections.shuffle(teams, new Random()); Teams1.clear(); Teams2.clear();
 			for (int i = 0; i < teams.size(); i += 2) {
-				PTeams.add(teams.get(i));
-				RTeams.add(teams.get(i+1));
+				Teams1.add(teams.get(i));
+				Teams2.add(teams.get(i+1));
 			}
 			if (allMatchesPermissable()) {break;}
 		}
 		
 		List<Match> out = new ArrayList<Match>();
-		for (int i = 0; i < PTeams.size(); i++) {
-			out.add(new Match(PTeams.get(i), RTeams.get(i)));
+		for (int i = 0; i < Teams1.size(); i++) {
+			out.add(new Match(Teams1.get(i), Teams2.get(i)));
 		}
 		return out;
 	}

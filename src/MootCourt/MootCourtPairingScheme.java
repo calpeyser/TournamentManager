@@ -5,8 +5,8 @@ import java.util.*;
 
 public abstract class MootCourtPairingScheme extends AutomaticDataAction {
 
-	protected List<Team> PTeams = new ArrayList<Team>();
-	protected List<Team> RTeams = new ArrayList<Team>();
+	protected List<Team> Teams1 = new ArrayList<Team>();
+	protected List<Team> Teams2 = new ArrayList<Team>();
 	
 	protected boolean isPermissableMatch(Team PTeam, Team RTeam) {
 		if (PTeam.hitTeams.contains(RTeam)) {
@@ -19,8 +19,8 @@ public abstract class MootCourtPairingScheme extends AutomaticDataAction {
 	}
 	
 	protected boolean allMatchesPermissable() {
-		for (int i = 0; i < PTeams.size(); i++) {
-			if (!isPermissableMatch(PTeams.get(i), RTeams.get(i))) {
+		for (int i = 0; i < Teams1.size(); i++) {
+			if (!isPermissableMatch(Teams1.get(i), Teams2.get(i))) {
 				return false;
 			}
 		}
@@ -28,30 +28,59 @@ public abstract class MootCourtPairingScheme extends AutomaticDataAction {
 	}
 
 	protected void resolveMatches() {
-		Utils.customAssert(PTeams.size() == RTeams.size(), "Unequal size for PTeams and DTeams");
+		Utils.customAssert(Teams1.size() == Teams2.size(), "Unequal size for PTeams and DTeams");
 		int i = 0;
 		int loopcount = 0;
 		while(true) {
 			loopcount++;
-			if (i == PTeams.size() || loopcount > 100) {
+			if (i == Teams1.size() || loopcount > 100) {
 				break;
 			}
-			if (isPermissableMatch(PTeams.get(i), RTeams.get(i))) {
+			if (isPermissableMatch(Teams1.get(i), Teams2.get(i))) {
 				i++; continue;
 			}
 			else {
-				if (i == 0) {
-					Team temp = PTeams.get(i);
-					PTeams.set(i, PTeams.get(i+1));
-					PTeams.set(i + 1, temp);
-					i = 0; continue;
+				// we choose a random swap based on the loopcount and try it
+				// flip Teams1 forward
+				if (loopcount % 4 == 0) {
+					if (i == Teams1.size()) {continue;}
+					else {
+						Team temp = Teams1.get(i);
+						Teams1.set(i, Teams1.get(i + 1));
+						Teams1.set(i + 1, temp);
+						i = 0; continue;
+					}
 				}
-				else {
-					Team temp = RTeams.get(i);
-					RTeams.set(i, RTeams.get(i-1));
-					RTeams.set(i - 1, temp);
-					i = 0; continue;
+				// flip Teams2 forward
+				else if (loopcount % 4 == 1) {
+					if (i == Teams1.size()) {continue;}
+					else {
+						Team temp = Teams2.get(i);
+						Teams2.set(i, Teams2.get(i + 1));
+						Teams2.set(i + 1, temp);
+						i = 0; continue;
+					}
 				}
+				// flip Teams1 backward
+				else if (loopcount % 4 == 2) {
+					if (i == 0) {continue;}
+					else {
+						Team temp = Teams1.get(i);
+						Teams1.set(i, Teams1.get(i - 1));
+						Teams1.set(i - 1, temp);
+						i = 0; continue;
+					}
+				}
+				// flip Teams2 backward
+				else if (loopcount % 4 == 3) {
+					if (i == 0) {continue;}
+					else {
+						Team temp = Teams2.get(i);
+						Teams2.set(i, Teams2.get(i - 1));
+						Teams2.set(i - 1, temp);
+						i = 0; continue;
+					}
+				}				
 			}
 		}
 	} 
