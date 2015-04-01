@@ -7,7 +7,8 @@ public class RandomPairing extends MootCourtPairingScheme {
 	@Override
 	public List<Match> createMatches() {
 		List<Team> teams = Utils.getAllTeams(db);
-		
+		Teams1.clear();
+		Teams2.clear();
 		while(true) {
 			Collections.shuffle(teams, new Random()); Teams1.clear(); Teams2.clear();
 			for (int i = 0; i < teams.size(); i += 2) {

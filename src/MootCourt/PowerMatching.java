@@ -7,6 +7,7 @@ public class PowerMatching extends MootCourtPairingScheme {
 	@Override
 	public List<Match> createMatches() {
 		List<Team> teams = Utils.getAllTeams(db);
+		Teams1.clear(); Teams2.clear();
 		Collections.sort(teams);
 		
 		for (int i = 0; i < teams.size(); i += 2) {

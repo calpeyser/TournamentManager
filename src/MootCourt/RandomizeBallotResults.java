@@ -11,20 +11,23 @@ public class RandomizeBallotResults extends UIDataAction {
 		Random gen = new Random();
 
 		db.getEntityManager().getTransaction().begin();
-		b.P1Presentation = gen.nextInt(10);
-		b.P1Argument = gen.nextInt(10);
-		b.P2Presentation = gen.nextInt(10);
-		b.P2Argument = gen.nextInt(10);
-		b.PTeamwork = gen.nextInt(10);
-		b.R1Presentation = gen.nextInt(10);
-		b.R1Argument = gen.nextInt(10);
-		b.R2Presentation = gen.nextInt(10);
-		b.R2Argument = gen.nextInt(10);
-		b.RTeamwork = gen.nextInt(10);
-		b.rank4 = b.currentMatch.PTeam.player1;
-		b.rank3 = b.currentMatch.PTeam.player2;
-		b.rank2 = b.currentMatch.RTeam.player1;
-		b.rank1 = b.currentMatch.RTeam.player2;
+		while (b.P1Presentation + b.P1Argument + b.P2Presentation + b.P2Argument + b.PTeamwork == 
+				b.R1Presentation + b.R1Argument + b.R2Presentation + b.R2Argument + b.RTeamwork) {
+			b.P1Presentation = gen.nextInt(10);
+			b.P1Argument = gen.nextInt(10);
+			b.P2Presentation = gen.nextInt(10);
+			b.P2Argument = gen.nextInt(10);
+			b.PTeamwork = gen.nextInt(10);
+			b.R1Presentation = gen.nextInt(10);
+			b.R1Argument = gen.nextInt(10);
+			b.R2Presentation = gen.nextInt(10);
+			b.R2Argument = gen.nextInt(10);
+			b.RTeamwork = gen.nextInt(10);
+			b.rank4 = b.currentMatch.PTeam.player1;
+			b.rank3 = b.currentMatch.PTeam.player2;
+			b.rank2 = b.currentMatch.RTeam.player1;
+			b.rank1 = b.currentMatch.RTeam.player2;
+		}
 		db.getEntityManager().getTransaction().commit();
 	}
 	

@@ -25,7 +25,13 @@ public class Match extends Record {
 		this.RTeam = DTeam;
 		this.ballots = new ArrayList<Judge>();
 	}
-
+	
+	public Team nonEliminatedTeam() {
+		Utils.customAssert(PTeam.eliminated || RTeam.eliminated, "Neither team is eliminated");
+		if (PTeam.eliminated) {return RTeam;}
+		else {return PTeam;}
+	}
+	
 	@Override
 	public String toString() {
 		return PTeam + " vs. " + RTeam;

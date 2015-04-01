@@ -24,7 +24,6 @@ import Utils.MiscUtils;
 
 public class HomeFrame extends JFrame {
 
-	private HomeFrame frame;
 	private JPanel contentPane;
 	private JButton newTournamentButton;
 	private JButton continueTournamentButton;
@@ -33,7 +32,6 @@ public class HomeFrame extends JFrame {
 
 	public HomeFrame(String tournamentName) {
 		super(tournamentName + ": Data Selection");
-		frame = this;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 250);
 		contentPane = new JPanel(); 
@@ -47,8 +45,7 @@ public class HomeFrame extends JFrame {
 		JPanel textPane = new JPanel();
 		textPane.setLayout(new BoxLayout(textPane, BoxLayout.PAGE_AXIS));
 		contentPane.add(textPane, BorderLayout.SOUTH);
-		
-		
+			
 		buttonsPane.add(Box.createRigidArea(new Dimension(0, 30)));
 		
 		newTournamentButton = new JButton("New Tournament");

@@ -9,6 +9,20 @@ import javax.persistence.criteria.Root;
 import Data.TournamentDataStore;
 
 public class Utils {
+	
+	public static Bracket getBracket(TournamentDataStore db) {
+		CriteriaBuilder cb = db.getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Bracket> cq = cb.createQuery(Bracket.class);
+		Root<Bracket> r = cq.from(Bracket.class);
+		cq.select(r);
+		List<Bracket> outList = db.getEntityManager().createQuery(cq).getResultList();
+		if (outList.size() == 0) {
+			return null;
+		}
+		customAssert(outList.size() == 1, "There are " + outList.size() + " brackets.");
+		return outList.get(0);
+	}
+	
 	public static List<Match> getAllMatches(TournamentDataStore db) {
 		CriteriaBuilder cb = db.getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Match> cq = cb.createQuery(Match.class);

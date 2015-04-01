@@ -16,4 +16,15 @@ public abstract class DefaultUITableEditOnlyAction extends DefaultUITableConfigA
 	protected DBTableModel getData() {
 		return new DBTableModel(db, getRecordType());
 	}
+	
+	@Override
+	public void attachToFrame(Window frame) {
+		data = getData();
+		dialog = new TableDialog(frame, data);
+		dialog.addListenerToExit(exitButton());
+		dialog.addListenerToEdit(editButton());
+		dialog.disableAdd();
+		dialog.disableDelete();
+		dialog.setVisible(true);		
+	}
 }

@@ -15,5 +15,4 @@ public abstract class Visible {
 	public void bind(TournamentDataStore db) {
 		this.db = db;
 	}
-	
 }

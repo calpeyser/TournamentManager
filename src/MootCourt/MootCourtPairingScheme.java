@@ -27,13 +27,28 @@ public abstract class MootCourtPairingScheme extends AutomaticDataAction {
 		return true;
 	}
 
+	private List<Team> copy(List<Team> teams) {
+		List<Team> out = new ArrayList<Team>();
+		for (Team t: teams) {
+			out.add(t);
+		}
+		return out;
+	}
+	
 	protected void resolveMatches() {
 		Utils.customAssert(Teams1.size() == Teams2.size(), "Unequal size for PTeams and DTeams");
+		List<Team> backup1 = copy(Teams1); List<Team> backup2 = copy(Teams2);
 		int i = 0;
 		int loopcount = 0;
 		while(true) {
 			loopcount++;
-			if (i == Teams1.size() || loopcount > 100) {
+			if (i == Teams1.size()) {
+				break;
+			}
+			if (loopcount > 100) {
+				// give up
+				Teams1 = backup1;
+				Teams2 = backup2;
 				break;
 			}
 			if (isPermissableMatch(Teams1.get(i), Teams2.get(i))) {
@@ -43,7 +58,7 @@ public abstract class MootCourtPairingScheme extends AutomaticDataAction {
 				// we choose a random swap based on the loopcount and try it
 				// flip Teams1 forward
 				if (loopcount % 4 == 0) {
-					if (i == Teams1.size()) {continue;}
+					if (i == Teams1.size() - 1) {continue;}
 					else {
 						Team temp = Teams1.get(i);
 						Teams1.set(i, Teams1.get(i + 1));
@@ -53,7 +68,7 @@ public abstract class MootCourtPairingScheme extends AutomaticDataAction {
 				}
 				// flip Teams2 forward
 				else if (loopcount % 4 == 1) {
-					if (i == Teams1.size()) {continue;}
+					if (i == Teams1.size() - 1) {continue;}
 					else {
 						Team temp = Teams2.get(i);
 						Teams2.set(i, Teams2.get(i + 1));

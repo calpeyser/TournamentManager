@@ -107,6 +107,9 @@ public class TournamentManager {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				String savename = JOptionPane.showInputDialog("Please provide a name for this tournament snapshot");
+				if (savename == null) {
+					return;
+				}
 				db.save(savename, frame);
 			}
 		};
@@ -116,6 +119,7 @@ public class TournamentManager {
 		this.ruleset = ruleset;
 		this.db = db;
 		
+		// bind actions
 		for (AutomaticDataAction action : ruleset.getStartState().getEntryConfig()) {
 			action.bind(db);
 			try {
@@ -125,6 +129,7 @@ public class TournamentManager {
 			}
 		}
 		
+		// bind visibles
 		for (Visible v : ruleset.getVisibles()) {
 			v.bind(db);
 		}

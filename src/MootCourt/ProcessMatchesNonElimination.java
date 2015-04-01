@@ -28,8 +28,8 @@ public class ProcessMatchesNonElimination extends AutomaticDataAction {
 				db.getEntityManager().getTransaction().begin();
 				m.PTeam.ballots += PBallots;
 				m.RTeam.ballots += RBallots;
-				m.PTeam.ballots += pointDifferential;
-				m.RTeam.ballots -= pointDifferential;
+				m.PTeam.pointDifferential += pointDifferential;
+				m.RTeam.pointDifferential -= pointDifferential;
 				
 				b.rank1.ranks += 4;
 				b.rank2.ranks += 6;
@@ -39,6 +39,12 @@ public class ProcessMatchesNonElimination extends AutomaticDataAction {
 				m.PTeam.hitTeams.add(m.RTeam);
 				m.RTeam.hitTeams.add(m.PTeam);
 				
+				m.PTeam.hitTeamsAsP.add(m.RTeam);
+				m.RTeam.hitTeamsAsR.add(m.PTeam);
+
+				m.PTeam.wentP = true;
+				m.RTeam.wentP = false;
+				
 				db.getEntityManager().getTransaction().commit();
 			}
 			else {
@@ -47,8 +53,8 @@ public class ProcessMatchesNonElimination extends AutomaticDataAction {
 				
 				int PScore1 = b1.P1Argument + b1.P1Presentation + b1.P2Argument + b1.P2Presentation + b1.PTeamwork;
 				int RScore1 = b1.R1Argument + b1.R1Presentation + b1.R2Argument + b1.R2Presentation + b1.RTeamwork;
-				int PScore2 = b2.P2Argument + b2.P1Presentation + b2.P2Argument + b2.P2Presentation + b2.PTeamwork;
-				int RScore2 = b2.R2Argument + b2.R1Presentation + b2.R2Argument + b2.R2Presentation + b2.RTeamwork;
+				int PScore2 = b2.P1Argument + b2.P1Presentation + b2.P2Argument + b2.P2Presentation + b2.PTeamwork;
+				int RScore2 = b2.R1Argument + b2.R1Presentation + b2.R2Argument + b2.R2Presentation + b2.RTeamwork;
 				Utils.customAssert(PScore1 != RScore1, "Tie in match " + m + " ballot " + b1);
 				Utils.customAssert(PScore2 != RScore2, "Tie in match " + m + " ballot " + b2);
 
@@ -62,8 +68,8 @@ public class ProcessMatchesNonElimination extends AutomaticDataAction {
 				db.getEntityManager().getTransaction().begin();
 				m.PTeam.ballots += PBallots;
 				m.RTeam.ballots += RBallots;
-				m.PTeam.ballots += pointDifferential;
-				m.RTeam.ballots -= pointDifferential;
+				m.PTeam.pointDifferential += pointDifferential;
+				m.RTeam.pointDifferential -= pointDifferential;
 				
 				b1.rank1.ranks += 2;
 				b1.rank2.ranks += 3;
@@ -77,6 +83,12 @@ public class ProcessMatchesNonElimination extends AutomaticDataAction {
 				
 				m.PTeam.hitTeams.add(m.RTeam);
 				m.RTeam.hitTeams.add(m.PTeam);
+				
+				m.PTeam.hitTeamsAsP.add(m.RTeam);
+				m.RTeam.hitTeamsAsR.add(m.PTeam);
+				
+				m.PTeam.wentP = true;
+				m.RTeam.wentP = false;
 				
 				db.getEntityManager().getTransaction().commit();
 			}

@@ -1,26 +1,25 @@
-package MootCourt;
+package Checkers;
 
 import java.util.List;
-
 import Visibles.TableVisible;
 
 public class CurrentMatches extends TableVisible {
 
 	@Override
 	public Object[] getColumnNames() {
-		String[] out = {"Petitioner", "Respondent"};
-		return out;
+		String[] names = {"Player 1", "Player 2"};
+		return names;
 	}
 
 	@Override
 	public Object[][] getData() {
 		List<Match> matches = Utils.getAllMatches(db);
-		Object[][] out = new Object[matches.size()][2];
+		Object[][] data = new Object[matches.size()][2];
 		for (int matchIndex = 0; matchIndex < matches.size(); matchIndex++) {
-			out[matchIndex][0] = matches.get(matchIndex).PTeam;
-			out[matchIndex][1] = matches.get(matchIndex).RTeam;
+			data[matchIndex][0] = matches.get(matchIndex).player1;
+			data[matchIndex][1] = matches.get(matchIndex).player2;
 		}
-		return out;	
+		return data;		
 	}
 
 	@Override

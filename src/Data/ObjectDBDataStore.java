@@ -73,7 +73,7 @@ public class ObjectDBDataStore implements TournamentDataStore {
 		// find the next number
 		int i = 1;
 		while(true) {
-			String canditateLocation = newPath + "_" + i + ".odb";
+			String canditateLocation = newPath + "_" + compressString(context.getCurrentState().getName())+ "_" + i + ".odb";
 			File f = new File(canditateLocation);
 			if (f.exists()) {
 				i++;
@@ -174,7 +174,6 @@ public class ObjectDBDataStore implements TournamentDataStore {
 	public void cleanFiles() {
 		emf.close();
 		String fileString = (String) emf.getProperties().get("objectdb.connection.path");
-		System.out.println(fileString);
 		Path filePath = Paths.get(fileString);
 		try {
 			Files.delete(filePath);
@@ -196,5 +195,15 @@ public class ObjectDBDataStore implements TournamentDataStore {
 
 	public void setContext(TournamentContext context) {
 		this.context = context;
+	}
+	
+	private static String compressString(String s) {
+		StringBuilder out = new StringBuilder();
+		for (char c : s.toCharArray()) {
+			if (c != ' ') {
+				out.append(c);
+			}
+		}
+		return out.toString();
 	}
 }

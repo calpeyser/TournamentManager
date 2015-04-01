@@ -62,11 +62,4 @@ public class Control {
 	public static void run(TournamentFactory factory) {
 		runTournament(factory);
 	}	
-	
-	/**
-	 * Testing on MockTrial
-	 */
-	public static void main(String[] args) {
-		run(new MockTrialTournamentFactory());
-	}
 }

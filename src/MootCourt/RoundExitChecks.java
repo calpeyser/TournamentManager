@@ -21,7 +21,7 @@ public class RoundExitChecks extends Check {
 			if (b.rank1 == b.rank4) {throw new CheckFailedException("Rank 1 and Rank 4 are both" + b.rank1 + " in ballot of " + b);}
 			if (b.rank2 == b.rank3) {throw new CheckFailedException("Rank 2 and Rank 3 are both" + b.rank2 + " in ballot of " + b);}
 			if (b.rank2 == b.rank4) {throw new CheckFailedException("Rank 2 and Rank 4 are both" + b.rank2 + " in ballot of " + b);}
-			if (b.rank3 == b.rank2) {throw new CheckFailedException("Rank 3 and Rank 4 are both" + b.rank3 + " in ballot of " + b);}
+			if (b.rank3 == b.rank4) {throw new CheckFailedException("Rank 3 and Rank 4 are both" + b.rank3 + " in ballot of " + b);}
 
 		}	
 	}

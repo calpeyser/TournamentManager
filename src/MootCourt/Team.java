@@ -15,11 +15,16 @@ public class Team extends Record implements Comparable<Team> {
 	@OneToOne @MustBeSet public Player player2;
 	
 	@OneToMany (targetEntity = Team.class) public List<Team> hitTeams;
-
+	@OneToMany (targetEntity = Team.class) public List<Team> hitTeamsAsP;
+	@OneToMany (targetEntity = Team.class) public List<Team> hitTeamsAsR;
+	
+	
 	@Basic public int ballots;
 	@Basic public int pointDifferential;
 	
 	@Basic boolean wentP;
+	
+	@Basic boolean eliminated;
 	
 	public Team() {
 		this.schoolName = null;
@@ -27,6 +32,9 @@ public class Team extends Record implements Comparable<Team> {
 		this.player1 = null;
 		this.player2 = null;
 		this.hitTeams = new ArrayList<Team>();
+		this.hitTeamsAsP = new ArrayList<Team>();
+		this.hitTeamsAsR = new ArrayList<Team>();
+		this.eliminated = false;
 	}
 		
 	public Team(String schoolName, String designation, Player player1, Player player2) {
@@ -35,6 +43,9 @@ public class Team extends Record implements Comparable<Team> {
 		this.player1 = player1;
 		this.player2 = player2;
 		this.hitTeams = new ArrayList<Team>();
+		this.hitTeamsAsP = new ArrayList<Team>();
+		this.hitTeamsAsR = new ArrayList<Team>();
+		this.eliminated = false;
 	}
 	
 	@Override
